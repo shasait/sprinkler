@@ -53,6 +53,21 @@
 		</repository>
 	</distributionManagement>
 
+	<developers>
+		<developer>
+			<id>shasait</id>
+			<name>Sebastian Hasait</name>
+			<email>sebastian@hasait.de</email>
+			<organization>HasaIT</organization>
+			<organizationUrl>https://hasait.de</organizationUrl>
+			<roles>
+				<role>owner</role>
+				<role>developer</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+	</developers>
+
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
