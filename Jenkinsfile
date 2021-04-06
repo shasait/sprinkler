@@ -24,7 +24,8 @@ properties([
 				string(name: 'gitUserName', defaultValue: 'ciserver', description: 'Git user name'),
 				string(name: 'gitUserEmail', defaultValue: 'ciserver@hasait.de', description: 'Git user email'),
 				booleanParam(name: 'forceTag', defaultValue: false, description: 'Replace an existing tag with the given name (add -f to git tag)'),
-				booleanParam(name: 'mvnDebug', defaultValue: false, description: 'Produce execution debug output (add -X to mvn)')
+				booleanParam(name: 'mvnDebug', defaultValue: false, description: 'Produce execution debug output (add -X to mvn)'),
+				booleanParam(name: 'clearMvnRepo', defaultValue: false, description: 'Clear repo before build')
 		]),
 		pipelineTriggers([pollSCM('H/10 * * * *')])
 ])
@@ -37,6 +38,7 @@ node('linux') {
 		params.gitUserEmail = ${params.gitUserEmail}
 		params.forceTag = ${params.forceTag}
 		params.mvnDebug = ${params.mvnDebug}
+		params.clearMvnRepo = ${params.clearMvnRepo}
 	""".stripIndent()
 
 	def wsHome
@@ -56,8 +58,10 @@ node('linux') {
 
 		mvnRepo = "${wsHome}/.m2repo"
 		echo "mvnRepo = ${mvnRepo}"
-		sh "rm -rf ${mvnRepo}"
-		sh "mkdir ${mvnRepo}"
+		if (params.clearMvnRepo) {
+			sh "rm -rf '${mvnRepo}'"
+		}
+		sh "mkdir -p '${mvnRepo}'"
 
 		sh "rm -rf 'co'"
 	}
