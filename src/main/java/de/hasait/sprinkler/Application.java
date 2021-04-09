@@ -16,17 +16,8 @@
 
 package de.hasait.sprinkler;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.concurrent.atomic.AtomicReference;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.system.ApplicationPidFileWriter;
-import org.springframework.boot.system.EmbeddedServerPortFileWriter;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
@@ -35,27 +26,8 @@ public class Application {
 
     public static final String TITLE = "Sprinkler";
 
-    private static final Logger LOG = LoggerFactory.getLogger(Application.class);
-
-    private static final AtomicReference<ApplicationContext> applicationContextHolder = new AtomicReference<>();
-
-    public static void exit(int exitCode) {
-        SpringApplication.exit(applicationContextHolder.get(), () -> exitCode);
-        System.exit(exitCode);
-    }
-
-    public static void main(String[] mainArgs) throws Exception {
-        SpringApplication app = new SpringApplication(Application.class);
-        app.addListeners(new ApplicationPidFileWriter());
-        app.addListeners(new EmbeddedServerPortFileWriter());
-        applicationContextHolder.set(app.run(mainArgs));
-
-        LOG.info("Press ENTER to shut down!");
-        String line = new BufferedReader(new InputStreamReader(System.in)).readLine();
-        if (line != null) {
-            LOG.info("Shutting down...");
-            exit(1);
-        }
+    public static void main(String[] mainArgs) {
+        SpringApplication.run(Application.class, mainArgs);
     }
 
 }
