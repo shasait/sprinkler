@@ -31,7 +31,7 @@ mapdb:
 
 # configuration of relays and rain service via application.properties in service folder
 
-#relay.gpio.relayToGpio: "Relay1=sysclass@4,Relay2=sysclass@22,Relay3=sysclass@6,Relay4=sysclass@26"
+#relay.gpio.relayToGpio: Relay1=sysclass@4,Relay2=sysclass@22,Relay3=sysclass@6,Relay4=sysclass@26
 
 #rain.hww.sriLayer=22
 #rain.hww.spatialReference=TODO

@@ -32,7 +32,7 @@ For Windows take a look [here](https://docs.spring.io/spring-boot/docs/current/r
 6) Create file `application.properties` (you need to replace the TODOs):
     ```
     # TODO Please adapt to your hardware relays 
-    relay.gpio.relayToGpio: "Relay1=sysclass@4,Relay2=sysclass@22,Relay3=sysclass@6,Relay4=sysclass@26"
+    relay.gpio.relayToGpio: Relay1=sysclass@4,Relay2=sysclass@22,Relay3=sysclass@6,Relay4=sysclass@26
    
     rain.hww.sriLayer=22
     rain.hww.spatialReference=TODO
