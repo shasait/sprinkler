@@ -51,8 +51,8 @@ public class GpioRelayConfiguration {
 
         if (!StringUtils.isEmpty(relayToGpio)) {
 
-            String entryRegex = ",?(.*?)=([^@]+)@([0-9]+)";
-            String fullRegex = "(?:" + entryRegex + ")";
+            String entryRegex = ",?([^=]+)=([^@]+)@([0-9]+)";
+            String fullRegex = "(?:" + entryRegex + ")+";
             if (!relayToGpio.matches(fullRegex)) {
                 throw new IllegalArgumentException("Invalid configuration for relayToGpio: " + relayToGpio);
             }
