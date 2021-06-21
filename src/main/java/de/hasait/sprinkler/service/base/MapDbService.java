@@ -18,8 +18,11 @@ package de.hasait.sprinkler.service.base;
 
 import javax.annotation.Nonnull;
 
+import com.google.common.base.Joiner;
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 /**
@@ -28,12 +31,18 @@ import org.springframework.stereotype.Service;
 @Service
 public class MapDbService {
 
+    private static final Logger LOG = LoggerFactory.getLogger(MapDbService.class);
+
     private final DB db;
 
     public MapDbService(MapDbServiceConfiguration configuration) {
         super();
 
         this.db = DBMaker.fileDB(configuration.getPath()).closeOnJvmShutdown().transactionEnable().checksumHeaderBypass().make();
+
+        if (LOG.isInfoEnabled()) {
+            LOG.info("AllNames: {}", Joiner.on(", ").join(db.getAllNames()));
+        }
     }
 
     public void commit() {
