@@ -58,13 +58,15 @@ public class GpioRelayProvider implements RelayProvider {
         this.relayNames = this.mapDbService.getDb().hashMap("RP_" + PROVIDER_ID + "-Names", Serializer.STRING, Serializer.STRING)
                                            .createOrOpen();
 
-        configuration.getRelayToGpios().forEach(relayToGpio -> {
-            String relayId = relayToGpio.getRelayId();
-            gpioProviders.put(relayId, relayToGpio.getGpioProvider());
-            gpioAddresses.put(relayId, relayToGpio.getGpioAddress());
-            relayNames.putIfAbsent(relayId, PROVIDER_ID + "-" + relayId);
-            createRelay(relayId);
-        });
+        if (configuration.getRelayToGpios() != null) {
+            configuration.getRelayToGpios().forEach(relayToGpio -> {
+                String relayId = relayToGpio.getRelayId();
+                gpioProviders.put(relayId, relayToGpio.getGpioProvider());
+                gpioAddresses.put(relayId, relayToGpio.getGpioAddress());
+                relayNames.putIfAbsent(relayId, PROVIDER_ID + "-" + relayId);
+                createRelay(relayId);
+            });
+        }
     }
 
     @Nonnull

@@ -133,7 +133,9 @@ public class RelaysView implements View, ViewDetach {
         LOG.debug("enter");
 
         relayService.addListener(relayServiceListener);
-        updateGrid();
+        if (updateGrid()) {
+            Notification.show("No relays", "Please configure relays in config file", Notification.Type.ERROR_MESSAGE);
+        }
     }
 
     @Override
@@ -201,10 +203,11 @@ public class RelaysView implements View, ViewDetach {
         saveButton.setEnabled(existing);
     }
 
-    private void updateGrid() {
+    private boolean updateGrid() {
         List<RelayDTO> relays = relayService.getRelays();
         beanGrid.setDataProvider(DataProvider.ofCollection(relays));
         onGridSelectionChanged(null);
+        return relays.isEmpty();
     }
 
 }
