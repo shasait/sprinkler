@@ -120,9 +120,9 @@ public class HwwRainService implements RainService {
     private List<RainValue> addRainValue(List<RainValue> oldValues, RainValue value) {
         int expectedSize = Math.min(10, oldValues.size() + 1);
         return ImmutableList.<RainValue>builderWithExpectedSize(expectedSize) //
-                                                                              .add(value) //
-                                                                              .addAll(oldValues.subList(0, expectedSize - 1)) //
-                                                                              .build();
+                            .add(value) //
+                            .addAll(oldValues.subList(0, expectedSize - 1)) //
+                            .build();
     }
 
     private void handleResult(long ende, int regenhoehe) {
@@ -134,12 +134,15 @@ public class HwwRainService implements RainService {
     @PostConstruct
     private void init() {
         schedule = taskScheduler.scheduleWithFixedDelay(this::update, TimeUnit.MINUTES.toMillis(10));
+        LOG.info("Started HWW updater");
     }
 
     @PreDestroy
     private void shutdown() {
         if (schedule != null) {
+            LOG.info("Stopping HWW updater...", new RuntimeException("Not thrown"));
             schedule.cancel(false);
+            LOG.info("Stopped HWW updater");
         }
     }
 
@@ -193,12 +196,18 @@ public class HwwRainService implements RainService {
             try {
                 resultJsonString = IOUtils.toString(url, StandardCharsets.UTF_8);
             } catch (IOException e) {
-                LOG.error("Invalid JSON", e);
+                LOG.error("Cannot read from URL: {}", url, e);
                 return;
             }
 
-            Gson gson = new Gson();
-            RainResult result = gson.fromJson(resultJsonString, RainResult.class);
+            RainResult result;
+            try {
+                Gson gson = new Gson();
+                result = gson.fromJson(resultJsonString, RainResult.class);
+            } catch (RuntimeException e) {
+                LOG.error("Cannot parse JSON:\n{}\n", resultJsonString, e);
+                return;
+            }
 
             if (!result.features.isEmpty()) {
                 long maxEnde = result.features.stream().map(RainFeature::getAttributes).map(RainFeatureAttributes::getEnde)
