@@ -215,6 +215,9 @@ public class ScheduleService extends AbstractListenableService {
             }
 
             relayService.setActive(providerId, relayId, true);
+            if (LOG.isInfoEnabled()) {
+                LOG.info("Activated relay: {}", relayService.getRelay(providerId, relayId));
+            }
             try {
                 Thread.sleep(durationMillisAfterRain);
             } catch (InterruptedException e) {

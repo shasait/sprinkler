@@ -72,4 +72,9 @@ public class RelayDTO {
         return this;
     }
 
+    @Override
+    public String toString() {
+        return "Relay " + name + " (" + providerId + "-" + relayId + ") active: " + active;
+    }
+
 }
