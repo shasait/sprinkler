@@ -210,13 +210,15 @@ public class ScheduleService extends AbstractListenableService {
                 durationMillisAfterRain = durationMillis;
             }
             if (durationMillisAfterRain <= 0) {
-                LOG.info("Skip activation due to rain");
+                if (LOG.isInfoEnabled()) {
+                    LOG.info("{} skipped due to rain", relayService.getRelay(providerId, relayId));
+                }
                 return;
             }
 
             relayService.setActive(providerId, relayId, true);
             if (LOG.isInfoEnabled()) {
-                LOG.info("Activated relay: {}", relayService.getRelay(providerId, relayId));
+                LOG.info("{} activated for {}ms", relayService.getRelay(providerId, relayId), durationMillisAfterRain);
             }
             try {
                 Thread.sleep(durationMillisAfterRain);
@@ -225,7 +227,7 @@ public class ScheduleService extends AbstractListenableService {
             }
             relayService.setActive(providerId, relayId, false);
             if (LOG.isInfoEnabled()) {
-                LOG.info("Deactivated relay: {}", relayService.getRelay(providerId, relayId));
+                LOG.info("{} deactivated", relayService.getRelay(providerId, relayId));
             }
         }
     }
