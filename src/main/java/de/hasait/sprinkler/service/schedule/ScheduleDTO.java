@@ -17,6 +17,7 @@
 package de.hasait.sprinkler.service.schedule;
 
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nonnull;
 
@@ -27,12 +28,17 @@ import de.hasait.sprinkler.service.relay.RelayDTO;
  */
 public class ScheduleDTO {
 
+    public static final TimeUnit DURATION_TIME_UNIT = TimeUnit.SECONDS;
+    public static final String DURATION_TIME_UNIT_STR = "s";
+
     private final Long id;
     private final long version;
 
+    private boolean enabled;
+
     private RelayDTO relay;
 
-    private int durationMinutes = 10;
+    private long duration = DURATION_TIME_UNIT.convert(10, TimeUnit.MINUTES);
     private int rainFactor100;
 
     private String cronExpression;
@@ -46,8 +52,9 @@ public class ScheduleDTO {
     public ScheduleDTO(@Nonnull ScheduleDTO other) {
         id = other.id;
         version = other.version;
+        enabled = other.enabled;
         relay = other.relay;
-        durationMinutes = other.durationMinutes;
+        duration = other.duration;
         rainFactor100 = other.rainFactor100;
         cronExpression = other.cronExpression;
         next = other.next;
@@ -62,8 +69,12 @@ public class ScheduleDTO {
         return cronExpression;
     }
 
-    public int getDurationMinutes() {
-        return durationMinutes;
+    public long getDuration() {
+        return duration;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
     }
 
     public Long getId() {
@@ -90,8 +101,12 @@ public class ScheduleDTO {
         this.cronExpression = cronExpression;
     }
 
-    public void setDurationMinutes(int durationMinutes) {
-        this.durationMinutes = durationMinutes;
+    public void setDuration(long duration) {
+        this.duration = duration;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     public void setNext(Date next) {

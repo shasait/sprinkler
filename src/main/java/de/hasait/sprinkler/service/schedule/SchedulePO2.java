@@ -18,41 +18,59 @@ package de.hasait.sprinkler.service.schedule;
 
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.apache.commons.lang3.StringUtils;
+
 import de.hasait.sprinkler.service.base.IdGenerator;
 
 /**
- * @deprecated Replaced by {@link SchedulePO2}.
+ *
  */
-@Deprecated
-public class SchedulePO implements Serializable {
+public class SchedulePO2 implements Serializable {
+
+    static final TimeUnit DURATION_TIME_UNIT = TimeUnit.SECONDS;
 
     static final long serialVersionUID = 1L;
 
     private final long id;
     private long version;
 
+    private boolean enabled;
     private String providerId;
     private String relayId;
-    private int durationMinutes = 10;
+    private long duration;
     private int rainFactor100;
     private String cronExpression;
 
-    public SchedulePO(@Nullable Long id) {
+    public SchedulePO2(@Nullable Long id) {
         this.id = id != null ? id : IdGenerator.next();
     }
 
-    public SchedulePO(@Nonnull SchedulePO other) {
+    public SchedulePO2(@Nonnull SchedulePO2 other) {
         id = other.id;
         version = other.version;
+        enabled = other.enabled;
         providerId = other.providerId;
         relayId = other.relayId;
-        durationMinutes = other.durationMinutes;
+        duration = other.duration;
         rainFactor100 = other.rainFactor100;
         cronExpression = other.cronExpression;
+    }
+
+    public SchedulePO2(@Nonnull SchedulePO other) {
+        id = other.getId();
+        version = other.getVersion();
+        enabled = true;
+        providerId = other.getProviderId();
+        relayId = other.getRelayId();
+        duration = DURATION_TIME_UNIT.convert(other.getDurationMinutes(), TimeUnit.MINUTES);
+        rainFactor100 = other.getRainFactor100();
+        String cronExpression = other.getCronExpression();
+        this.cronExpression = StringUtils.isNotBlank(cronExpression) ? "0 " + cronExpression : null;
     }
 
     @Override
@@ -63,11 +81,12 @@ public class SchedulePO implements Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        SchedulePO other = (SchedulePO) o;
+        SchedulePO2 other = (SchedulePO2) o;
         return id == other.id && version == other.version //
                 && Objects.equals(providerId, other.providerId) //
                 && Objects.equals(relayId, other.relayId) //
-                && durationMinutes == other.durationMinutes //
+                && enabled == other.enabled //
+                && duration == other.duration //
                 && rainFactor100 == other.rainFactor100 //
                 && Objects.equals(cronExpression, other.cronExpression) //
                 ;
@@ -77,8 +96,12 @@ public class SchedulePO implements Serializable {
         return cronExpression;
     }
 
-    public int getDurationMinutes() {
-        return durationMinutes;
+    public long getDuration() {
+        return duration;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
     }
 
     public long getId() {
@@ -110,8 +133,12 @@ public class SchedulePO implements Serializable {
         this.cronExpression = cronExpression;
     }
 
-    public void setDurationMinutes(int durationMinutes) {
-        this.durationMinutes = durationMinutes;
+    public void setDuration(long duration) {
+        this.duration = duration;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     public void setProviderId(String providerId) {

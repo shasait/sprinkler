@@ -17,7 +17,9 @@
 package de.hasait.sprinkler.service.schedule;
 
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
@@ -54,7 +56,7 @@ public class ScheduleService extends AbstractListenableService {
     private final TaskScheduler taskScheduler;
     private final RelayService relayService;
     private final RainService rainService;
-    private final BTreeMap<Long, SchedulePO> schedules;
+    private final BTreeMap<Long, SchedulePO2> schedules;
     private final ConcurrentHashMap<Long, ScheduledFuture<?>> scheduledFutures = new ConcurrentHashMap<>();
 
     public ScheduleService(MapDbService mapDbService, TaskScheduler taskScheduler, RelayService relayService, RainService rainService) {
@@ -63,13 +65,27 @@ public class ScheduleService extends AbstractListenableService {
         this.relayService = relayService;
         this.rainService = rainService;
 
-        schedules = this.mapDbService.getDb().treeMap("schedules-" + SchedulePO.serialVersionUID, Serializer.LONG, Serializer.JAVA)
-                                     .createOrOpen();
+        schedules = this.mapDbService.getDb().treeMap("schedules2", Serializer.LONG, Serializer.JAVA).createOrOpen();
+        migrate1();
         schedules.values().forEach(this::updateSchedule);
     }
 
+    private void migrate1() {
+        BTreeMap<Long, SchedulePO> schedules1 = //
+                mapDbService.getDb().treeMap("schedules-" + SchedulePO.serialVersionUID, Serializer.LONG, Serializer.JAVA).createOrOpen();
+        Iterator<Map.Entry<Long, SchedulePO>> iterator = schedules1.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<Long, SchedulePO> next = iterator.next();
+            SchedulePO2 po = new SchedulePO2(next.getValue());
+            schedules.put(po.getId(), po);
+            iterator.remove();
+            LOG.info("Migrated SchedulePO -> SchedulePO2: {}", next.getKey());
+        }
+        mapDbService.commit();
+    }
+
     public void addOrUpdateSchedule(@Nonnull ScheduleDTO scheduleDTO) {
-        SchedulePO schedule = mapToSchedulePO(scheduleDTO);
+        SchedulePO2 schedule = mapToSchedulePO(scheduleDTO);
         schedules.merge(schedule.getId(), schedule, this::optimisticLockUpdate);
         mapDbService.commit();
         updateSchedule(schedule);
@@ -78,7 +94,7 @@ public class ScheduleService extends AbstractListenableService {
     }
 
     public void deleteSchedule(@Nonnull ScheduleDTO scheduleDTO) {
-        SchedulePO schedule = mapToSchedulePO(scheduleDTO);
+        SchedulePO2 schedule = mapToSchedulePO(scheduleDTO);
         if (schedules.remove(schedule.getId(), schedule)) {
             mapDbService.commit();
             notifyListeners();
@@ -101,6 +117,14 @@ public class ScheduleService extends AbstractListenableService {
         return TimeUnit.SECONDS.toMillis(Math.max(0, durationSeconds - (long) rain * rainFactor100 / 100));
     }
 
+    public Date determineNext(String cronExpression, Date seed) {
+        if (StringUtils.isNotBlank(cronExpression)) {
+            CronSequenceGenerator cronSequenceGenerator = new CronSequenceGenerator(cronExpression);
+            return cronSequenceGenerator.next(seed);
+        }
+        return null;
+    }
+
     @Nonnull
     public List<ScheduleDTO> getSchedules() {
         return schedules.values().stream().map(this::mapToScheduleDTO).collect(Collectors.toList());
@@ -118,57 +142,50 @@ public class ScheduleService extends AbstractListenableService {
         return new RuntimeException("Modified meanwhile");
     }
 
-    private String getCronExpression(SchedulePO schedule) {
-        String cronExpression = schedule.getCronExpression();
-        return !StringUtils.isBlank(cronExpression) ? "0 " + cronExpression : null;
+    private long getDurationMillis(SchedulePO2 schedule) {
+        return TimeUnit.SECONDS.toMillis(schedule.getDuration());
     }
 
-    private long getDurationMillis(SchedulePO schedule) {
-        return TimeUnit.MINUTES.toMillis(schedule.getDurationMinutes());
-    }
-
-    private RelayDTO getRelay(SchedulePO schedule) {
+    private RelayDTO getRelay(SchedulePO2 schedule) {
         String relayId = schedule.getRelayId();
         return !StringUtils.isBlank(relayId) ? relayService.getRelay(schedule.getProviderId(), schedule.getRelayId()) : null;
     }
 
-    private ScheduleDTO mapToScheduleDTO(SchedulePO po) {
+    private ScheduleDTO mapToScheduleDTO(SchedulePO2 po) {
         ScheduleDTO dto = new ScheduleDTO(po.getId(), po.getVersion());
+        dto.setEnabled(po.isEnabled());
         dto.setRelay(getRelay(po));
-        dto.setDurationMinutes(po.getDurationMinutes());
+        dto.setDuration(ScheduleDTO.DURATION_TIME_UNIT.convert(po.getDuration(), SchedulePO2.DURATION_TIME_UNIT));
         dto.setRainFactor100(po.getRainFactor100());
-        dto.setCronExpression(po.getCronExpression());
-        String cronExpression = getCronExpression(po);
-        if (!StringUtils.isBlank(cronExpression)) {
-            CronSequenceGenerator cronSequenceGenerator = new CronSequenceGenerator(cronExpression);
-            Date next = cronSequenceGenerator.next(new Date());
-            dto.setNext(next);
-        }
+        String cronExpression = po.getCronExpression();
+        dto.setCronExpression(cronExpression);
+        dto.setNext(determineNext(cronExpression, new Date()));
         return dto;
     }
 
-    private SchedulePO mapToSchedulePO(ScheduleDTO dto) {
-        SchedulePO po = new SchedulePO(dto.getId());
+    private SchedulePO2 mapToSchedulePO(ScheduleDTO dto) {
+        SchedulePO2 po = new SchedulePO2(dto.getId());
         po.setVersion(dto.getVersion());
+        po.setEnabled(dto.isEnabled());
         RelayDTO relay = dto.getRelay();
         po.setProviderId(relay != null ? relay.getProviderId() : null);
         po.setRelayId(relay != null ? relay.getRelayId() : null);
-        po.setDurationMinutes(dto.getDurationMinutes());
+        po.setDuration(SchedulePO2.DURATION_TIME_UNIT.convert(dto.getDuration(), ScheduleDTO.DURATION_TIME_UNIT));
         po.setRainFactor100(dto.getRainFactor100());
         po.setCronExpression(dto.getCronExpression());
         return po;
     }
 
-    private SchedulePO optimisticLockUpdate(SchedulePO current, SchedulePO updated) {
+    private SchedulePO2 optimisticLockUpdate(SchedulePO2 current, SchedulePO2 updated) {
         if (current.getVersion() != updated.getVersion()) {
             throw createOptimisticLockFailed();
         }
-        SchedulePO result = new SchedulePO(updated);
+        SchedulePO2 result = new SchedulePO2(updated);
         result.setVersion(result.getVersion() + 1);
         return result;
     }
 
-    private void updateSchedule(SchedulePO schedule) {
+    private void updateSchedule(SchedulePO2 schedule) {
         long scheduleId = schedule.getId();
 
         ScheduledFuture<?> oldSchedule = scheduledFutures.remove(scheduleId);
@@ -176,9 +193,10 @@ public class ScheduleService extends AbstractListenableService {
             oldSchedule.cancel(true);
         }
 
+        boolean enabled = schedule.isEnabled();
         RelayDTO relay = getRelay(schedule);
-        String cronExpression = getCronExpression(schedule);
-        if (relay != null && cronExpression != null) {
+        String cronExpression = schedule.getCronExpression();
+        if (enabled && relay != null && cronExpression != null) {
             long durationMillis = getDurationMillis(schedule);
             CronTrigger cronTrigger = new CronTrigger(cronExpression);
             PulseTask task = new PulseTask(schedule.getProviderId(), schedule.getRelayId(), durationMillis, schedule.getRainFactor100());
