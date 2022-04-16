@@ -18,7 +18,7 @@
 
 	<groupId>de.hasait.sprinkler</groupId>
 	<artifactId>sprinkler</artifactId>
-	<version>1.1.0</version>
+	<version>1.1.1-SNAPSHOT</version>
 
 	<name>sprinkler</name>
 	<description>Sprinkler - Spring Boot application for controlling sprinklers using Raspberry Pi</description>
