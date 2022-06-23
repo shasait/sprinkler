@@ -66,10 +66,10 @@ node('linux') {
 		sh "rm -rf 'co'"
 	}
 
-	configFileProvider([configFile(fileId: 'ciserver-settings.xml', targetLocation: 'maven-settings.xml', variable: 'mvnSettings'), configFile(fileId: 'ciserver-toolchains.xml', targetLocation: 'maven-toolchains.xml', variable: 'mvnToolchains')]) {
+	configFileProvider([configFile(fileId: 'ciserver-settings.xml', targetLocation: 'maven-settings.xml', variable: 'mvnSettings')]) {
 		withEnv(["PATH+JDK=${jdkHome}/bin", "PATH+MVN=${mvnHome}/bin"]) {
 			dir('co') {
-				def mvnOptions = "-B -U -e -s ${mvnSettings} --global-toolchains ${mvnToolchains} -Dmaven.repo.local=${mvnRepo}"
+				def mvnOptions = "-B -U -e -s ${mvnSettings} -Dmaven.repo.local=${mvnRepo}"
 				if (params.mvnDebug) {
 					mvnOptions = "-X ${mvnOptions}"
 				}

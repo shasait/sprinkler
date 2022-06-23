@@ -21,6 +21,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nonnull;
 
+import de.hasait.sprinkler.service.base.Util;
 import de.hasait.sprinkler.service.relay.RelayDTO;
 
 /**
@@ -30,6 +31,10 @@ public class ScheduleDTO {
 
     public static final TimeUnit DURATION_TIME_UNIT = TimeUnit.SECONDS;
     public static final String DURATION_TIME_UNIT_STR = "s";
+
+    public static String getDuration2nd(long duration) {
+        return Util.millisToHuman(TimeUnit.MILLISECONDS.convert(duration, DURATION_TIME_UNIT), Integer.MAX_VALUE);
+    }
 
     private final Long id;
     private final long version;
@@ -43,6 +48,7 @@ public class ScheduleDTO {
 
     private String cronExpression;
     private Date next;
+    private String nextRelative;
 
     public ScheduleDTO() {
         id = null;
@@ -58,6 +64,7 @@ public class ScheduleDTO {
         rainFactor100 = other.rainFactor100;
         cronExpression = other.cronExpression;
         next = other.next;
+        nextRelative = other.nextRelative;
     }
 
     public ScheduleDTO(long id, long version) {
@@ -73,6 +80,10 @@ public class ScheduleDTO {
         return duration;
     }
 
+    public String getDuration2nd() {
+        return getDuration2nd(duration);
+    }
+
     public boolean isEnabled() {
         return enabled;
     }
@@ -83,6 +94,10 @@ public class ScheduleDTO {
 
     public Date getNext() {
         return next;
+    }
+
+    public String getNextRelative() {
+        return nextRelative;
     }
 
     public int getRainFactor100() {
@@ -111,6 +126,10 @@ public class ScheduleDTO {
 
     public void setNext(Date next) {
         this.next = next;
+    }
+
+    public void setNextRelative(String nextRelative) {
+        this.nextRelative = nextRelative;
     }
 
     public void setRainFactor100(int rainFactor100) {

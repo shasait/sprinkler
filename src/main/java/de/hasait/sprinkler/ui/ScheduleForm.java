@@ -64,8 +64,10 @@ class ScheduleForm extends FormLayout {
     public final TextField cronExpressionField = new TextField(SchedulesView.CAPTION_CRON_EXPRESSION);
 
     private final ScheduleService scheduleService;
-    private final Label durationPreviewLabel;
+    private final Label duration2ndLabel;
+    private final Label effDurationPreviewLabel;
     private final Label next1PreviewLabel;
+    private final Label nextRelativePreviewLabel;
     private final Label next2PreviewLabel;
     private final Binder<ScheduleDTO> binder;
 
@@ -84,18 +86,22 @@ class ScheduleForm extends FormLayout {
         addComponent(relayComboBox);
 
         addComponent(durationField);
-        durationField.addValueChangeListener(this::updateDurationPreviewLabel);
+        durationField.addValueChangeListener(this::onDurationOrRainFactorChange);
+
+        duration2ndLabel = new Label();
+        duration2ndLabel.setCaption(SchedulesView.CAPTION_DURATION_2ND);
+        addComponent(duration2ndLabel);
 
         addComponent(rainFactor100Field);
         rainFactor100Field.setDescription(
                 SchedulesView.CAPTION_DURATION + " is reduced by rain multiplied with this value and then divided by 100");
-        rainFactor100Field.addValueChangeListener(this::updateDurationPreviewLabel);
+        rainFactor100Field.addValueChangeListener(this::onDurationOrRainFactorChange);
 
-        durationPreviewLabel = new Label();
-        durationPreviewLabel.setCaption("Effective " + SchedulesView.CAPTION_DURATION);
-        durationPreviewLabel.setDescription(
+        effDurationPreviewLabel = new Label();
+        effDurationPreviewLabel.setCaption("Effective " + SchedulesView.CAPTION_DURATION);
+        effDurationPreviewLabel.setDescription(
                 SchedulesView.CAPTION_DURATION + " for current weather including " + SchedulesView.CAPTION_RAIN_FACTOR_100);
-        addComponent(durationPreviewLabel);
+        addComponent(effDurationPreviewLabel);
 
         addComponent(cronExpressionField);
         cronExpressionField.setDescription("Second[0-59] Minute[0-59] Hour[0-23] Day[1-31] Month[1-12] Weekday[0-7]"
@@ -105,11 +111,15 @@ class ScheduleForm extends FormLayout {
         );
 
         next1PreviewLabel = new Label();
-        next1PreviewLabel.setCaption("Next activation");
+        next1PreviewLabel.setCaption(SchedulesView.CAPTION_NEXT);
         addComponent(next1PreviewLabel);
 
+        nextRelativePreviewLabel = new Label();
+        nextRelativePreviewLabel.setCaption(SchedulesView.CAPTION_NEXT_RELATIVE);
+        addComponent(nextRelativePreviewLabel);
+
         next2PreviewLabel = new Label();
-        next2PreviewLabel.setCaption("Next+1 activation");
+        next2PreviewLabel.setCaption(SchedulesView.CAPTION_NEXT + " + 1");
         addComponent(next2PreviewLabel);
 
         binder = new Binder<>(ScheduleDTO.class);
@@ -133,8 +143,11 @@ class ScheduleForm extends FormLayout {
 
         binder.forMemberField(cronExpressionField) //
               .withValidator(value -> {
-                  Date next1 = scheduleService.determineNext(value, new Date());
+                  Date now = new Date();
+                  Date next1 = scheduleService.determineNext(value, now);
                   next1PreviewLabel.setValue(next1 == null ? "" : String.format(SchedulesView.NEXT_FORMAT, next1));
+                  nextRelativePreviewLabel.setValue(
+                          next1 == null ? "" : scheduleService.determineNextRelative(now, next1, Integer.MAX_VALUE));
                   Date next2 = scheduleService.determineNext(value, next1);
                   next2PreviewLabel.setValue(next2 == null ? "" : String.format(SchedulesView.NEXT_FORMAT, next2));
                   return true;
@@ -156,18 +169,20 @@ class ScheduleForm extends FormLayout {
         binder.writeBean(bean);
     }
 
-    private void updateDurationPreviewLabel(HasValue.ValueChangeEvent<String> event) {
-        ScheduleDTO tmp = new ScheduleDTO();
+    private void onDurationOrRainFactorChange(HasValue.ValueChangeEvent<String> event) {
         try {
+            ScheduleDTO tmp = new ScheduleDTO();
             binder.writeBean(tmp);
             long duration = tmp.getDuration();
+            duration2ndLabel.setValue(ScheduleDTO.getDuration2nd(duration));
+
             int rainFactor100 = tmp.getRainFactor100();
             long durationMillis = scheduleService.determineDurationMillis(
                     TimeUnit.MILLISECONDS.convert(duration, ScheduleDTO.DURATION_TIME_UNIT), rainFactor100);
-            durationPreviewLabel.setValue(
-                    ScheduleDTO.DURATION_TIME_UNIT.convert(durationMillis, TimeUnit.MILLISECONDS) + ScheduleDTO.DURATION_TIME_UNIT_STR);
+            effDurationPreviewLabel.setValue(Long.toString(ScheduleDTO.DURATION_TIME_UNIT.convert(durationMillis, TimeUnit.MILLISECONDS)));
         } catch (ValidationException e) {
-            durationPreviewLabel.setValue("Fix fields first");
+            duration2ndLabel.setValue("");
+            effDurationPreviewLabel.setValue("");
         }
     }
 

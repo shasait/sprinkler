@@ -54,9 +54,11 @@ public class SchedulesView implements View, ViewDetach {
     public static final String CAPTION_ENABLED = "Enabled";
     public static final String CAPTION_RELAY = "Relay";
     public static final String CAPTION_DURATION = "Duration [" + ScheduleDTO.DURATION_TIME_UNIT_STR + "]";
+    public static final String CAPTION_DURATION_2ND = "Duration";
     public static final String CAPTION_RAIN_FACTOR_100 = "Rain Factor";
     public static final String CAPTION_CRON_EXPRESSION = "Cron Expression";
     public static final String CAPTION_NEXT = "Next Activation";
+    public static final String CAPTION_NEXT_RELATIVE = "";
     public static final String CAPTION_ACTIVE = "Active";
     public static final String NEXT_FORMAT = "%1$tF %1$tT %1$ta";
 
@@ -184,8 +186,11 @@ public class SchedulesView implements View, ViewDetach {
                 row -> row.getRelay() != null ? row.getRelay().getName() : StringUtils.EMPTY);
         relay.setCaption(CAPTION_RELAY);
 
-        Grid.Column<ScheduleDTO, Long> durationSeconds = beanGrid.addColumn(ScheduleDTO::getDuration);
-        durationSeconds.setCaption(CAPTION_DURATION);
+        Grid.Column<ScheduleDTO, Long> duration = beanGrid.addColumn(ScheduleDTO::getDuration);
+        duration.setCaption(CAPTION_DURATION);
+
+        Grid.Column<ScheduleDTO, String> duration2nd = beanGrid.addColumn(ScheduleDTO::getDuration2nd);
+        duration2nd.setCaption(CAPTION_DURATION_2ND);
 
         Grid.Column<ScheduleDTO, Integer> rainFactor = beanGrid.addColumn(ScheduleDTO::getRainFactor100);
         rainFactor.setCaption(CAPTION_RAIN_FACTOR_100);
@@ -196,6 +201,9 @@ public class SchedulesView implements View, ViewDetach {
         Grid.Column<ScheduleDTO, Date> next = beanGrid.addColumn(ScheduleDTO::getNext);
         next.setRenderer(new DateRenderer(NEXT_FORMAT));
         next.setCaption(CAPTION_NEXT);
+
+        Grid.Column<ScheduleDTO, String> nextRelative = beanGrid.addColumn(ScheduleDTO::getNextRelative);
+        nextRelative.setCaption(CAPTION_NEXT_RELATIVE);
 
         Grid.Column<ScheduleDTO, Boolean> active = beanGrid.addColumn(row -> row.getRelay() != null && row.getRelay().isActive());
         active.setCaption(CAPTION_ACTIVE);

@@ -39,6 +39,7 @@ import org.springframework.stereotype.Service;
 
 import de.hasait.sprinkler.service.base.AbstractListenableService;
 import de.hasait.sprinkler.service.base.MapDbService;
+import de.hasait.sprinkler.service.base.Util;
 import de.hasait.sprinkler.service.relay.RelayDTO;
 import de.hasait.sprinkler.service.relay.RelayService;
 import de.hasait.sprinkler.service.weather.RainService;
@@ -125,6 +126,10 @@ public class ScheduleService extends AbstractListenableService {
         return null;
     }
 
+    public String determineNextRelative(Date seed, Date next, int limit) {
+        return "in " + Util.millisToHuman(seed, next, limit);
+    }
+
     @Nonnull
     public List<ScheduleDTO> getSchedules() {
         return schedules.values().stream().map(this::mapToScheduleDTO).collect(Collectors.toList());
@@ -159,7 +164,10 @@ public class ScheduleService extends AbstractListenableService {
         dto.setRainFactor100(po.getRainFactor100());
         String cronExpression = po.getCronExpression();
         dto.setCronExpression(cronExpression);
-        dto.setNext(determineNext(cronExpression, new Date()));
+        Date now = new Date();
+        Date next = determineNext(cronExpression, now);
+        dto.setNext(next);
+        dto.setNextRelative(determineNextRelative(now, next, 3));
         return dto;
     }
 
