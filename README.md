@@ -6,12 +6,12 @@ Application for controlling sprinklers using Raspberry Pi.
 
 * Licensed under the Apache License, Version 2.0
 * Web frontend to configure schedules
-* Sprinkler runtime can be reduced by rain
-* Relay providers
+* Sprinkler runtime can be reduced by amount of rain
+* Relay providers: 
   * GPIO via `/sys/class/gpio`
-* Supported rain services
+* Supported rain services:
   * [Hamburg Wasser](https://sri.hamburgwasser.de/)
-* Simply implement interfaces to support more relays and rain services:
+* Extend by implementing interfaces to support more relays and rain services:
   * [`RelayProvider`](src/main/java/de/hasait/sprinkler/service/relay/RelayProvider.java)
   * [`RainService`](src/main/java/de/hasait/sprinkler/service/weather/RainService.java)
 
@@ -24,12 +24,12 @@ For Windows take a look [here](https://docs.spring.io/spring-boot/docs/current/r
 2) Create a service folder `/srv/sprinkler` and ensure the service user can write into it
 3) Create a log folder `/var/log/sprinkler` and ensure the service user can write into it
 4) Download the latest JAR as `sprinkler.jar` into service folder
-5) Create file `sprinkler.conf`:
+5) Create file `sprinkler.conf` in service folder:
     ```
     JAVA_OPTS=-Xmx512m
     LOG_FOLDER=/var/log/sprinkler
     ```
-6) Create file `application.properties` (you need to replace the TODOs):
+6) Create file `application.properties` in service folder and replace TODOs:
     ```
     # TODO Please adapt to your hardware relays 
     relay.gpio.relayToGpio: Relay1=sysclass@4,Relay2=sysclass@22,Relay3=sysclass@6,Relay4=sysclass@26
@@ -57,4 +57,7 @@ For Windows take a look [here](https://docs.spring.io/spring-boot/docs/current/r
     WantedBy=multi-user.target
     ```
 
-8) Enable service by executing: `systemctl enable sprinkler.service`
+8) Start and enable service:
+    * Start now: `systemctl start sprinkler.service`
+    * Check status: `systemctl status sprinkler.service`
+    * Enable at boot: `systemctl enable sprinkler.service`
