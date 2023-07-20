@@ -7,13 +7,13 @@ Application for controlling sprinklers using Raspberry Pi.
 * Licensed under the Apache License, Version 2.0
 * Web frontend to configure schedules
 * Sprinkler runtime can be reduced by amount of rain
-* Relay providers: 
-  * GPIO via `/sys/class/gpio`
-* Supported rain services:
-  * [Hamburg Wasser](https://sri.hamburgwasser.de/)
-* Extend by implementing interfaces to support more relays and rain services:
-  * [`RelayProvider`](src/main/java/de/hasait/sprinkler/service/relay/RelayProvider.java)
-  * [`RainService`](src/main/java/de/hasait/sprinkler/service/weather/RainService.java)
+* Relay providers:
+    * GPIO via `/sys/class/gpio` (e.g. relay boards for Raspberry Pi)
+* Supported sensor providers, e.g. for determining rain:
+    * [Hamburg Wasser](https://sri.hamburgwasser.de/)
+* Extend by implementing interfaces to support more relays and sensors:
+    * [`RelayProvider`](src/main/java/de/hasait/sprinkler/service/relay/provider/RelayProvider.java)
+    * [`SensorProvider`](src/main/java/de/hasait/sprinkler/service/sensor/provider/SensorProvider.java)
 
 ## Installation
 
@@ -30,14 +30,8 @@ For Windows take a look [here](https://docs.spring.io/spring-boot/docs/current/r
     LOG_FOLDER=/var/log/sprinkler
     ```
 6) Create file `application.properties` in service folder and replace TODOs:
-    ```
-    # TODO Please adapt to your hardware relays 
-    relay.gpio.relayToGpio: Relay1=sysclass@4,Relay2=sysclass@22,Relay3=sysclass@6,Relay4=sysclass@26
-   
-    rain.hww.sriLayer=22
-    rain.hww.spatialReference=TODO
-    rain.hww.positionX=TODO
-    rain.hww.positionY=TODO
+    ``` 
+    # Nothing here currently
     ```
 7) Create systemd unit `/etc/systemd/system/sprinkler.service`:
     ```
@@ -61,3 +55,35 @@ For Windows take a look [here](https://docs.spring.io/spring-boot/docs/current/r
     * Start now: `systemctl start sprinkler.service`
     * Check status: `systemctl status sprinkler.service`
     * Enable at boot: `systemctl enable sprinkler.service`
+
+## Development / Contribution
+
+### Reference Documentation
+
+For further reference, please consider the following sections:
+
+* [Official Apache Maven documentation](https://maven.apache.org/guides/index.html)
+* [Spring Boot Maven Plugin Reference Guide](https://docs.spring.io/spring-boot/docs/3.1.2/maven-plugin/reference/html/)
+* [Create an OCI image](https://docs.spring.io/spring-boot/docs/3.1.2/maven-plugin/reference/html/#build-image)
+* [Spring Configuration Processor](https://docs.spring.io/spring-boot/docs/3.1.2/reference/htmlsingle/#appendix.configuration-metadata.annotation-processor)
+* [Vaadin](https://vaadin.com/docs)
+* [Spring Security](https://docs.spring.io/spring-boot/docs/3.1.2/reference/htmlsingle/#web.security)
+* [Spring Data JPA](https://docs.spring.io/spring-boot/docs/3.1.2/reference/htmlsingle/#data.sql.jpa-and-spring-data)
+* [Validation](https://docs.spring.io/spring-boot/docs/3.1.2/reference/htmlsingle/#io.validation)
+* [Spring Boot Actuator](https://docs.spring.io/spring-boot/docs/3.1.2/reference/htmlsingle/#actuator)
+
+### Guides
+
+The following guides illustrate how to use some features concretely:
+
+* [Creating CRUD UI with Vaadin](https://spring.io/guides/gs/crud-with-vaadin/)
+* [Securing a Web Application](https://spring.io/guides/gs/securing-web/)
+* [Spring Boot and OAuth2](https://spring.io/guides/tutorials/spring-boot-oauth2/)
+* [Authenticating a User with LDAP](https://spring.io/guides/gs/authenticating-ldap/)
+* [Accessing Data with JPA](https://spring.io/guides/gs/accessing-data-jpa/)
+* [Validation](https://spring.io/guides/gs/validating-form-input/)
+* [Building a RESTful Web Service with Spring Boot Actuator](https://spring.io/guides/gs/actuator-service/)
+
+### TODO
+
+* Graph for visualization of Sensor values

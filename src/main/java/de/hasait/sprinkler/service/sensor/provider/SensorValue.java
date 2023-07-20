@@ -14,23 +14,34 @@
  * limitations under the License.
  */
 
-package de.hasait.sprinkler;
+package de.hasait.sprinkler.service.sensor.provider;
 
-import com.vaadin.flow.component.page.AppShellConfigurator;
-import com.vaadin.flow.theme.Theme;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ComponentScan;
+import java.time.LocalDateTime;
 
-@SpringBootApplication
-@ComponentScan(basePackages = "de.hasait")
-@Theme(value = "sprinkler")
-public class Application implements AppShellConfigurator {
+/**
+ *
+ */
+public class SensorValue {
 
-    public static final String TITLE = "Sprinkler";
+    private final LocalDateTime dateTime;
+    private final int value;
 
-    public static void main(String[] mainArgs) {
-        SpringApplication.run(Application.class, mainArgs);
+    public SensorValue(LocalDateTime dateTime, int value) {
+        this.dateTime = dateTime;
+        this.value = value;
+    }
+
+    public LocalDateTime getDateTime() {
+        return dateTime;
+    }
+
+    public int getValue() {
+        return value;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%1d (%2$tF %2$tR %2$ta)", value, dateTime);
     }
 
 }

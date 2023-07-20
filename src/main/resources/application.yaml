@@ -14,26 +14,113 @@
 # limitations under the License.
 #
 
+spring:
+  profiles:
+    active: 'prod'
+
 server:
   port: 8080
 
-vaadin:
-  servlet:
-    productionMode: true
-    closeIdleSessions: true
+---
+spring:
+  config:
+    activate:
+      on-profile: 'dev'
+  h2:
+    console:
+      enabled: false
+  datasource:
+    url:                 'jdbc:h2:mem:devdb'
+    username:            'sa'
+    password:            'password'
+    provider-class-name: 'org.h2.Provider'
+  sql:
+    init:
+      mode: 'always'
+  jpa:
+    database-platform:               'org.hibernate.dialect.H2Dialect'
+    defer-datasource-initialization: true
+    show-sql:                        true
+    hibernate:
+      ddl-auto: 'create-drop'
 
 logging:
   level:
-    de.hasait: info
+    de.hasait: 'debug'
 
-mapdb:
-  path: sprinkler-1.db
+vaadin:
+  servlet:
+    production-mode:     false
+    close-idle-sessions: true
+  whitelisted-packages:
+    - 'com.vaadin'
+    - 'org.vaadin'
+    - 'dev.hilla'
+    - 'de.hasait'
 
-# configuration of relays and rain service via application.properties in service folder
+---
+spring:
+  config:
+    activate:
+      on-profile: 'test'
+  h2:
+    console:
+      enabled: false
+  datasource:
+    url:                 'jdbc:h2:mem:testdb'
+    username:            'sa'
+    password:            'password'
+    provider-class-name: 'org.h2.Provider'
+  sql:
+    init:
+      mode: 'always'
+  jpa:
+    database-platform:               'org.hibernate.dialect.H2Dialect'
+    defer-datasource-initialization: true
+    show-sql:                        true
+    hibernate:
+      ddl-auto: 'create-drop'
 
-#relay.gpio.relayToGpio: Relay1=sysclass@4,Relay2=sysclass@22,Relay3=sysclass@6,Relay4=sysclass@26
+logging:
+  level:
+    de.hasait: 'debug'
 
-#rain.hww.sriLayer=22
-#rain.hww.spatialReference=TODO
-#rain.hww.positionX=TODO
-#rain.hww.positionY=TODO
+vaadin:
+  servlet:
+    production-mode:     true
+    close-idle-sessions: true
+
+---
+spring:
+  config:
+    activate:
+      on-profile: 'prod'
+  main:
+    banner-mode: 'off'
+  h2:
+    console:
+      enabled: false
+  datasource:
+    url:                 'jdbc:h2:./data.h2;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE'
+    username:            'sa'
+    password:            'password'
+    provider-class-name: 'org.h2.Provider'
+  sql:
+    init:
+      mode: 'never'
+  jpa:
+    database-platform: 'org.hibernate.dialect.H2Dialect'
+    show-sql:          false
+    hibernate:
+      ddl-auto: 'update'
+  devtools:
+    add-properties: false
+
+logging:
+  level:
+    de.hasait: 'info'
+
+vaadin:
+  servlet:
+    production-mode:     true
+    close-idle-sessions: true

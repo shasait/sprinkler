@@ -14,23 +14,24 @@
  * limitations under the License.
  */
 
-package de.hasait.sprinkler;
+package de.hasait.sprinkler.service.sensor.provider;
 
-import com.vaadin.flow.component.page.AppShellConfigurator;
-import com.vaadin.flow.theme.Theme;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ComponentScan;
+import de.hasait.sprinkler.service.AbstractProviderService;
+import org.springframework.stereotype.Service;
 
-@SpringBootApplication
-@ComponentScan(basePackages = "de.hasait")
-@Theme(value = "sprinkler")
-public class Application implements AppShellConfigurator {
+/**
+ *
+ */
+@Service
+public class SensorProviderService extends AbstractProviderService<SensorProvider> {
 
-    public static final String TITLE = "Sprinkler";
+    public SensorProviderService(SensorProvider[] providers) {
+        super(providers);
+    }
 
-    public static void main(String[] mainArgs) {
-        SpringApplication.run(Application.class, mainArgs);
+    public SensorValue obtainValue(String providerId, String providerConfig) {
+        SensorProvider provider = getProviderByIdNotNull(providerId);
+        return provider.obtainValue(providerConfig);
     }
 
 }

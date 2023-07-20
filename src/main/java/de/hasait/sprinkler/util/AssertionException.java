@@ -14,23 +14,29 @@
  * limitations under the License.
  */
 
-package de.hasait.sprinkler;
+package de.hasait.sprinkler.util;
 
-import com.vaadin.flow.component.page.AppShellConfigurator;
-import com.vaadin.flow.theme.Theme;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ComponentScan;
+/**
+ *
+ */
+public class AssertionException extends RuntimeException {
 
-@SpringBootApplication
-@ComponentScan(basePackages = "de.hasait")
-@Theme(value = "sprinkler")
-public class Application implements AppShellConfigurator {
+    private static final long serialVersionUID = 1L;
 
-    public static final String TITLE = "Sprinkler";
+    public AssertionException() {
+        super();
+    }
 
-    public static void main(String[] mainArgs) {
-        SpringApplication.run(Application.class, mainArgs);
+    public AssertionException(final String pMessage) {
+        super(pMessage);
+    }
+
+    public AssertionException(final String pMessage, final Throwable pCause) {
+        super(pMessage, pCause);
+    }
+
+    public AssertionException(final Throwable pCause) {
+        super(pCause);
     }
 
 }
