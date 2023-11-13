@@ -73,6 +73,7 @@ node('linux') {
 				if (params.mvnDebug) {
 					mvnOptions = "-X ${mvnOptions}"
 				}
+				mvnOptions = "${mvnOptions} -Pproduction"
 				def mvnCommand = "mvn ${mvnOptions}"
 				def currentBranch
 				def releaseTag
