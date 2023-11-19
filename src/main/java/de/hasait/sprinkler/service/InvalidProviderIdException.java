@@ -1,4 +1,4 @@
-package de.hasait.sprinkler.service.sensor.provider;
+package de.hasait.sprinkler.service;
 
 public class InvalidProviderIdException extends RuntimeException {
 

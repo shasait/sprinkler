@@ -16,8 +16,6 @@
 
 package de.hasait.sprinkler.service;
 
-import de.hasait.sprinkler.service.sensor.provider.InvalidProviderIdException;
-
 import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.List;

@@ -33,7 +33,7 @@ import de.hasait.sprinkler.domain.schedule.ScheduleRepository;
 import de.hasait.sprinkler.domain.sensor.SensorPO;
 import de.hasait.sprinkler.domain.sensor.SensorRepository;
 import de.hasait.sprinkler.service.schedule.ScheduleService;
-import de.hasait.sprinkler.service.sensor.provider.InvalidProviderIdException;
+import de.hasait.sprinkler.service.InvalidProviderIdException;
 import de.hasait.sprinkler.ui.AbstractCrudForm;
 import de.hasait.sprinkler.ui.JpaRepositoryDataProvider;
 import de.hasait.sprinkler.ui.UiConstants;

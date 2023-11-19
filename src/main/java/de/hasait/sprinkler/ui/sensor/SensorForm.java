@@ -32,7 +32,7 @@ import de.hasait.sprinkler.domain.sensor.SensorPO;
 import de.hasait.sprinkler.domain.sensor.SensorRepository;
 import de.hasait.sprinkler.domain.sensor.SensorValuePO;
 import de.hasait.sprinkler.service.sensor.SensorService;
-import de.hasait.sprinkler.service.sensor.provider.InvalidProviderIdException;
+import de.hasait.sprinkler.service.InvalidProviderIdException;
 import de.hasait.sprinkler.service.sensor.provider.SensorProviderService;
 import de.hasait.sprinkler.ui.AbstractCrudForm;
 import de.hasait.sprinkler.ui.UiConstants;
