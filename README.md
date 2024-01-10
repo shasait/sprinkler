@@ -33,7 +33,9 @@ For Windows take a look [here](https://docs.spring.io/spring-boot/docs/current/r
     ``` 
     # Nothing here currently
     ```
-7) Create systemd unit `/etc/systemd/system/sprinkler.service`:
+7) Create file `users.json` in service folder based on [users.json](users.json)
+
+8) Create systemd unit `/etc/systemd/system/sprinkler.service`:
     ```
     [Unit]
     Description=sprinkler service
@@ -51,7 +53,7 @@ For Windows take a look [here](https://docs.spring.io/spring-boot/docs/current/r
     WantedBy=multi-user.target
     ```
 
-8) Start and enable service:
+9) Start and enable service:
     * Start now: `systemctl start sprinkler.service`
     * Check status: `systemctl status sprinkler.service`
     * Enable at boot: `systemctl enable sprinkler.service`
