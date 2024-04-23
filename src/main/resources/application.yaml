@@ -95,8 +95,6 @@ spring:
   config:
     activate:
       on-profile: 'prod'
-  main:
-    banner-mode: 'off'
   h2:
     console:
       enabled: false

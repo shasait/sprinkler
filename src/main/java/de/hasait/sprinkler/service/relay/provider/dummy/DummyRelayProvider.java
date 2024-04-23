@@ -51,12 +51,17 @@ public class DummyRelayProvider extends AbstractPinBasedRelayProvider {
     }
 
     @Override
-    protected void changePin(int address, boolean active) {
+    protected String validateConfigNonEmpty(@Nonnull String config) {
+        return null;
+    }
+
+    @Override
+    protected void changePin(String address, boolean active) {
         LOG.debug("changePin: {}, {}", address, active);
     }
 
     @Override
-    protected boolean initPin(int address) {
+    protected boolean initPin(String address) {
         return false;
     }
 

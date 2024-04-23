@@ -32,7 +32,7 @@ public abstract class AbstractPinBasedRelayProvider implements RelayProvider {
 
     private static final Logger LOG = LoggerFactory.getLogger(AbstractPinBasedRelayProvider.class);
 
-    protected final ConcurrentHashMap<Integer, Integer> pins = new ConcurrentHashMap<>();
+    protected final ConcurrentHashMap<String, Integer> pins = new ConcurrentHashMap<>();
     private final String id;
 
     protected AbstractPinBasedRelayProvider(String id) {
@@ -47,24 +47,24 @@ public abstract class AbstractPinBasedRelayProvider implements RelayProvider {
 
     @Nullable
     @Override
-    public String validateConfig(@Nonnull String config) {
-        try {
-            Integer.parseInt(config);
-        } catch (NumberFormatException e) {
-            return "Not a number";
+    public final String validateConfig(@Nullable String config) {
+        if (config == null || config.trim().isEmpty()) {
+            return "Cannot be empty";
         }
-        return null;
+        return validateConfigNonEmpty(config);
     }
+
+    protected abstract String validateConfigNonEmpty(@Nonnull String config);
 
     @Override
     public final boolean isActive(@Nonnull String config) {
-        int address = Integer.parseInt(config);
+        String address = config.trim();
         return pins.computeIfAbsent(address, ignored -> initPin01(address)) > 0;
     }
 
     @Override
     public final void changeActive(@Nonnull String config, int amount) {
-        int address = Integer.parseInt(config);
+        String address = config.trim();
         pins.compute(address, (key, current) -> {
             int state = current == null ? initPin01(address) : current;
             int newState = Math.max(0, state + amount);
@@ -81,16 +81,16 @@ public abstract class AbstractPinBasedRelayProvider implements RelayProvider {
         });
     }
 
-    protected abstract void changePin(int address, boolean active);
+    protected abstract void changePin(String address, boolean active);
 
-    private int initPin01(int address) {
+    private int initPin01(String address) {
         return initPin(address) ? 1 : 0;
     }
 
     /**
-     * Initialize pin and return current state: <code>1</code> if active; <code>0</code> otherwise.
+     * Initialize pin and return current state (true=active).
      */
-    protected abstract boolean initPin(int address);
+    protected abstract boolean initPin(String address);
 
     @PreDestroy
     protected void shutdown() {

@@ -25,12 +25,14 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import de.hasait.sprinkler.domain.relay.RelayPO;
 import de.hasait.sprinkler.domain.relay.RelayRepository;
+import de.hasait.sprinkler.service.relay.provider.RelayProvider;
 import de.hasait.sprinkler.service.relay.provider.RelayProviderService;
 import de.hasait.sprinkler.ui.AbstractCrudGrid;
 import de.hasait.sprinkler.ui.MainLayout;
 import de.hasait.sprinkler.ui.UiConstants;
-import de.hasait.sprinkler.ui.schedule.SchedulesView;
 import jakarta.annotation.security.PermitAll;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -43,6 +45,8 @@ import jakarta.annotation.security.PermitAll;
 public class RelaysView extends AbstractCrudGrid<RelayPO, RelayRepository, RelayForm> {
 
     public static final String TITLE = "Relays";
+
+    private static final Logger LOG = LoggerFactory.getLogger(RelaysView.class);
 
     private final TestForm testForm;
 
@@ -66,7 +70,13 @@ public class RelaysView extends AbstractCrudGrid<RelayPO, RelayRepository, Relay
         providerConfig.setHeader(UiConstants.CAPTION_PROVIDER_CONFIG);
 
         Grid.Column<RelayPO> active = beanGrid.addColumn(po -> {
-            return relayProviderService.isActive(po.getProviderId(), po.getProviderConfig());
+            try {
+                return relayProviderService.isActive(po.getProviderId(), po.getProviderConfig());
+            } catch (RuntimeException e) {
+                LOG.warn("{} failed", RelayProvider.class.getSimpleName(), e);
+                // TODO make it somehow visible for the user
+                return false;
+            }
         });
         active.setHeader(UiConstants.CAPTION_ACTIVE);
     }

@@ -8,7 +8,8 @@ Application for controlling sprinklers using Raspberry Pi.
 * Web frontend to configure schedules
 * Sprinkler runtime can be reduced by amount of rain
 * Relay providers:
-    * GPIO via `/sys/class/gpio` (e.g. relay boards for Raspberry Pi)
+    * GPIO via gpiod utils (e.g. relay boards for Raspberry Pi)
+    * GPIO via `/sys/class/gpio` (deprecated)
 * Supported sensor providers, e.g. for determining rain:
     * [Hamburg Wasser](https://sri.hamburgwasser.de/)
 * Extend by implementing interfaces to support more relays and sensors:
