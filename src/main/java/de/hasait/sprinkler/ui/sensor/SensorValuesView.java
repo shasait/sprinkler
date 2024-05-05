@@ -57,6 +57,7 @@ public class SensorValuesView extends AbstractGridView<SensorValuePO> {
 
         Grid.Column<SensorValuePO> dateTimeColumn = beanGrid.addColumn(SensorValuePO::getDateTime);
         dateTimeColumn.setHeader("Date Time");
+        dateTimeColumn.setSortable(true);
 
         Grid.Column<SensorValuePO> intValueColumn = beanGrid.addColumn(SensorValuePO::getIntValue);
         intValueColumn.setHeader("Value");
