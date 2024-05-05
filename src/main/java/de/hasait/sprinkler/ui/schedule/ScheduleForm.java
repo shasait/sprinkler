@@ -32,13 +32,14 @@ import de.hasait.sprinkler.domain.schedule.SchedulePO;
 import de.hasait.sprinkler.domain.schedule.ScheduleRepository;
 import de.hasait.sprinkler.domain.sensor.SensorPO;
 import de.hasait.sprinkler.domain.sensor.SensorRepository;
-import de.hasait.sprinkler.service.schedule.ScheduleService;
 import de.hasait.sprinkler.service.InvalidProviderIdException;
+import de.hasait.sprinkler.service.schedule.ScheduleService;
 import de.hasait.sprinkler.ui.AbstractCrudForm;
 import de.hasait.sprinkler.ui.JpaRepositoryDataProvider;
 import de.hasait.sprinkler.ui.UiConstants;
 import de.hasait.sprinkler.ui.widget.CronWidget;
 import de.hasait.sprinkler.util.Util;
+import de.hasait.sprinkler.util.ValueWithExplanation;
 
 import java.util.concurrent.TimeUnit;
 
@@ -153,16 +154,19 @@ class ScheduleForm extends AbstractCrudForm<SchedulePO, ScheduleRepository> {
         } catch (ValidationException e) {
             durationHumanLabel.setValue("!");
             effDurationPreviewLabel.setValue("!");
+            effDurationPreviewLabel.setTooltipText(e.getMessage());
             return;
         }
 
         durationHumanLabel.setValue(Util.millisToHuman(tmp.determineDurationMillis(), Integer.MAX_VALUE));
 
         try {
-            long durationMillisRain = scheduleService.determineDurationMillisSensor(tmp);
-            effDurationPreviewLabel.setValue(Long.toString(TimeUnit.SECONDS.convert(durationMillisRain, TimeUnit.MILLISECONDS)));
+            ValueWithExplanation<Long> durationMillisSensor = scheduleService.determineDurationMillisSensor(tmp);
+            effDurationPreviewLabel.setValue(Long.toString(TimeUnit.SECONDS.convert(durationMillisSensor.getValue(), TimeUnit.MILLISECONDS)));
+            effDurationPreviewLabel.setTooltipText(durationMillisSensor.getExplanation());
         } catch (InvalidProviderIdException e) {
             effDurationPreviewLabel.setValue("!");
+            effDurationPreviewLabel.setTooltipText(e.getMessage());
         }
     }
 

@@ -96,7 +96,7 @@ class TestForm extends VerticalLayout {
 
     private void onActivateButtonClicked(ClickEvent<?> clickEvent) {
         int durationSeconds = Integer.parseInt(durationSecondsField.getValue());
-        relayService.scheduleNow(relay.getId(), (int) TimeUnit.SECONDS.toMillis(durationSeconds));
+        relayService.scheduleNow(relay.getId(), (int) TimeUnit.SECONDS.toMillis(durationSeconds), "TestForm");
     }
 
     private void onDeactivateButtonClicked(ClickEvent<?> clickEvent) {

@@ -6,6 +6,7 @@ import de.hasait.sprinkler.domain.schedule.SchedulePO;
 import de.hasait.sprinkler.domain.schedule.ScheduleRepository;
 import de.hasait.sprinkler.service.relay.RelayService;
 import de.hasait.sprinkler.util.Util;
+import de.hasait.sprinkler.util.ValueWithExplanation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.TaskScheduler;
@@ -92,7 +93,7 @@ public class ScheduleTaskService {
                 long remainingMillis = durationMillis - Duration.between(previousStart, now).toMillis();
                 if (remainingMillis > 10000) {
                     LOG.info("Resuming {}...", po.getRelay().getName());
-                    registerScheduledFuture(scheduleId, relayService.scheduleNow(po.getRelay().getId(), remainingMillis));
+                    registerScheduledFuture(scheduleId, relayService.scheduleNow(po.getRelay().getId(), remainingMillis, "Resuming after restart"));
                 }
             }
         }
@@ -105,10 +106,10 @@ public class ScheduleTaskService {
 
     public void executeSchedule(long scheduleId) {
         SchedulePO schedulePO = repository.findById(scheduleId).orElseThrow();
-        long durationMillisSensor = scheduleService.determineDurationMillisSensor(schedulePO);
-        if (durationMillisSensor <= 0) {
+        ValueWithExplanation<Long> durationMillisSensor = scheduleService.determineDurationMillisSensor(schedulePO);
+        if (durationMillisSensor.getValue() <= 0) {
             if (LOG.isInfoEnabled()) {
-                LOG.info("{} skipped due to rain", schedulePO.getRelay().getName());
+                LOG.info("{} skipped: {}", schedulePO.getRelay().getName(), durationMillisSensor.getExplanation());
             }
             return;
         }
@@ -118,11 +119,11 @@ public class ScheduleTaskService {
         scheduleLog.setStart(now);
         scheduleLog.setSchedule(schedulePO);
         scheduleLog.setRelayName(schedulePO.getRelay().getName());
-        scheduleLog.setDurationMillis(durationMillisSensor);
+        scheduleLog.setDurationMillis(durationMillisSensor.getValue());
         scheduleLogRepository.save(scheduleLog);
         scheduleLogRepository.deleteAllBefore(now.minusMonths(2));
 
-        registerScheduledFuture(scheduleId, relayService.scheduleNow(schedulePO.getRelay().getId(), durationMillisSensor));
+        registerScheduledFuture(scheduleId, relayService.scheduleNow(schedulePO.getRelay().getId(), durationMillisSensor.getValue(), durationMillisSensor.getExplanation()));
     }
 
     private class SprinklerWithSensorTask implements Runnable {

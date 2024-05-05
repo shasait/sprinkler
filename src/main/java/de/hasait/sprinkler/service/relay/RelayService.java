@@ -34,9 +34,9 @@ public class RelayService {
         providerService.changeActive(relayPO.getProviderId(), relayPO.getProviderConfig(), amount);
     }
 
-    public ScheduledFuture<?> scheduleNow(long relayId, long durationMillis) {
+    public ScheduledFuture<?> scheduleNow(long relayId, long durationMillis, String explanation) {
         RelayPO relayPO = repository.findById(relayId).orElseThrow();
-        return taskScheduler.schedule(new RelayTask(relayPO.getId(), relayPO.getName(), durationMillis), Instant.now());
+        return taskScheduler.schedule(new RelayTask(relayPO.getId(), relayPO.getName(), durationMillis, explanation), Instant.now());
     }
 
     public void deactivate(long relayId) {
@@ -50,18 +50,20 @@ public class RelayService {
         private final String relayName;
         private final long durationMillis;
         private final String durationMillisHuman;
+        private final String explanation;
 
-        public RelayTask(long relayId, String relayName, long durationMillis) {
+        public RelayTask(long relayId, String relayName, long durationMillis, String explanation) {
             this.relayId = relayId;
             this.relayName = relayName;
             this.durationMillis = durationMillis;
             this.durationMillisHuman = Util.millisToHuman(durationMillis, 3);
+            this.explanation = explanation;
         }
 
         @Override
         public void run() {
             if (LOG.isInfoEnabled()) {
-                LOG.info("{} activating for {}ms ({})...", relayName, durationMillis, durationMillisHuman);
+                LOG.info("{} activating for {}ms ({}) - {}...", relayName, durationMillis, durationMillisHuman, explanation);
             }
             changeActive(relayId, 1);
             try {

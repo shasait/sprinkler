@@ -21,6 +21,7 @@ import de.hasait.sprinkler.domain.schedule.ScheduleRepository;
 import de.hasait.sprinkler.domain.sensor.SensorPO;
 import de.hasait.sprinkler.domain.sensor.SensorValuePO;
 import de.hasait.sprinkler.service.sensor.SensorService;
+import de.hasait.sprinkler.util.ValueWithExplanation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -44,22 +45,26 @@ public class ScheduleService {
         this.sensorService = sensorService;
     }
 
-    public long determineDurationMillisSensor(SchedulePO schedulePO) {
+    public ValueWithExplanation<Long> determineDurationMillisSensor(SchedulePO schedulePO) {
         return determineDurationMillisSensor(schedulePO.determineDurationMillis(), schedulePO.getSensorInfluence(), schedulePO.getSensorChangeLimit(), schedulePO.getSensor());
     }
 
-    public long determineDurationMillisSensor(long durationMillis, int sensorInfluence, int sensorChangeLimit, SensorPO sensorPO) {
-        if (sensorInfluence == 0 || sensorPO == null) {
-            return durationMillis;
+    public ValueWithExplanation<Long> determineDurationMillisSensor(long durationMillis, int sensorInfluence, int sensorChangeLimit, SensorPO sensorPO) {
+        if (sensorPO == null) {
+            return new ValueWithExplanation<>(durationMillis, "Unmodified duration as no sensor is configured");
+        } else if (sensorInfluence == 0) {
+            return new ValueWithExplanation<>(durationMillis, "Unmodified duration as sensor is ignored (sensorInfluence is 0)");
         }
-        int change = sensorService.determineChange(sensorPO);
-        if (change > sensorChangeLimit) {
-            return 0;
+        int sensorChange = sensorService.determineChange(sensorPO);
+        if (sensorChange > sensorChangeLimit) {
+            return new ValueWithExplanation<>(0L, "Zero as sensorChange is greater than sensorChangeLimit: " + sensorChange + " > " + sensorChangeLimit);
         }
         List<SensorValuePO> lastSensorValues = sensorService.getLastValues(sensorPO);
         int value = lastSensorValues.isEmpty() ? 0 : lastSensorValues.get(0).getIntValue();
         long durationSeconds = TimeUnit.MILLISECONDS.toSeconds(durationMillis);
-        return TimeUnit.SECONDS.toMillis(Math.max(0, durationSeconds - (long) value * sensorInfluence / 100));
+        int influenceDivisor = 100;
+        long durationMillisWithInfluence = TimeUnit.SECONDS.toMillis(Math.max(0, durationSeconds - (long) value * sensorInfluence / influenceDivisor));
+        return new ValueWithExplanation<>(durationMillisWithInfluence, "duration - lastSensorValue x sensorInfluence / " + influenceDivisor + " = " + durationSeconds + " - " + value + " x " + sensorInfluence + " / " + influenceDivisor);
     }
 
 }
