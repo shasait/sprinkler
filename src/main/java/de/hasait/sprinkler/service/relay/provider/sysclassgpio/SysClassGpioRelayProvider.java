@@ -44,34 +44,24 @@ public class SysClassGpioRelayProvider extends AbstractPinBasedRelayProvider {
     private static final String SYS_CLASS_GPIO_VALUE_FORMAT = "/sys/class/gpio/gpio{0}/value";
     private static final String GPIO_DIRECTION_OUT = "out";
 
-    private final String disabledReason;
+    private static String determineDisabledReason() {
+        if (!new File(SYS_CLASS_GPIO_EXPORT).exists()) {
+            return SYS_CLASS_GPIO_EXPORT + " does not exist";
+        }
+        if (!new File(SYS_CLASS_GPIO_EXPORT).canWrite()) {
+            return SYS_CLASS_GPIO_EXPORT + " is not writable";
+        }
+        return null;
+    }
 
     public SysClassGpioRelayProvider() {
-        super(PROVIDER_ID);
-
-        if (!new File(SYS_CLASS_GPIO_EXPORT).exists()) {
-            disabledReason = SYS_CLASS_GPIO_EXPORT + " does not exist";
-        } else if (!new File(SYS_CLASS_GPIO_EXPORT).canWrite()) {
-            disabledReason = SYS_CLASS_GPIO_EXPORT + " is not writable";
-        } else {
-            disabledReason = null;
-        }
-
-        if (disabledReason != null) {
-            LOG.warn("{} - {}", PROVIDER_ID, disabledReason);
-        }
+        super(PROVIDER_ID, determineDisabledReason());
     }
 
     @Nonnull
     @Override
     public String getDescription() {
         return "Relays via " + SYS_CLASS_GPIO_VALUE_FORMAT;
-    }
-
-    @Nullable
-    @Override
-    public String getDisabledReason() {
-        return disabledReason;
     }
 
     @Nullable
@@ -87,22 +77,12 @@ public class SysClassGpioRelayProvider extends AbstractPinBasedRelayProvider {
 
     @Override
     protected void changePin(String address, boolean active) {
-        if (disabledReason != null) {
-            LOG.warn("Cannot change pin {} to {} - {}", address, active, disabledReason);
-            return;
-        }
-
         String value = active ? "1" : "0";
         echoInto(MessageFormatUtil.format(SYS_CLASS_GPIO_VALUE_FORMAT, address), value, 100);
     }
 
     @Override
     protected boolean initPin(String address) {
-        if (disabledReason != null) {
-            LOG.warn("Cannot init pin {} - {}", address, disabledReason);
-            return false;
-        }
-
         echoInto(SYS_CLASS_GPIO_EXPORT, address, 2000);
         echoInto(MessageFormatUtil.format(SYS_CLASS_GPIO_DIRECTION_FORMAT, address), GPIO_DIRECTION_OUT, 1000);
         return false;
@@ -110,10 +90,6 @@ public class SysClassGpioRelayProvider extends AbstractPinBasedRelayProvider {
 
     @Override
     protected void shutdown() {
-        if (disabledReason != null) {
-            return;
-        }
-
         pins.forEach((address, active) -> echoInto(SYS_CLASS_GPIO_UNEXPORT, address, 0));
 
         super.shutdown();

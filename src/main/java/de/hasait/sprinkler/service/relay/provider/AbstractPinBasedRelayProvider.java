@@ -34,15 +34,27 @@ public abstract class AbstractPinBasedRelayProvider implements RelayProvider {
 
     protected final ConcurrentHashMap<String, Integer> pins = new ConcurrentHashMap<>();
     private final String id;
+    private final String disabledReason;
 
-    protected AbstractPinBasedRelayProvider(String id) {
+    protected AbstractPinBasedRelayProvider(String id, String disabledReason) {
         this.id = id;
+        this.disabledReason = disabledReason;
+
+        if (disabledReason != null) {
+            LOG.warn("{} - {}", id, disabledReason);
+        }
     }
 
     @Nonnull
     @Override
     public final String getId() {
         return id;
+    }
+
+    @Nullable
+    @Override
+    public final String getDisabledReason() {
+        return disabledReason;
     }
 
     @Nullable
@@ -59,12 +71,20 @@ public abstract class AbstractPinBasedRelayProvider implements RelayProvider {
     @Override
     public final boolean isActive(@Nonnull String config) {
         String address = config.trim();
+        if (disabledReason != null) {
+            LOG.warn("Cannot query pin {} - {}", address, disabledReason);
+            return false;
+        }
         return pins.computeIfAbsent(address, ignored -> initPin01(address)) > 0;
     }
 
     @Override
     public final void changeActive(@Nonnull String config, int amount) {
         String address = config.trim();
+        if (disabledReason != null) {
+            LOG.warn("Cannot change pin {} - {}", address, disabledReason);
+            return;
+        }
         pins.compute(address, (key, current) -> {
             int state = current == null ? initPin01(address) : current;
             int newState = Math.max(0, state + amount);

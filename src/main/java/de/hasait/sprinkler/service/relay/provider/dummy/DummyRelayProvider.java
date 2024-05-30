@@ -35,19 +35,13 @@ public class DummyRelayProvider extends AbstractPinBasedRelayProvider {
     private static final Logger LOG = LoggerFactory.getLogger(DummyRelayProvider.class);
 
     public DummyRelayProvider() {
-        super(PROVIDER_ID);
+        super(PROVIDER_ID, null);
     }
 
     @Nonnull
     @Override
     public String getDescription() {
         return "Dummy for testing";
-    }
-
-    @Nullable
-    @Override
-    public String getDisabledReason() {
-        return null;
     }
 
     @Override

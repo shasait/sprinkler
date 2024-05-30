@@ -47,33 +47,19 @@ public class GpioDRelayProvider extends AbstractPinBasedRelayProvider {
     private static final String GPIO_SET_COMMAND = "/usr/bin/gpioset";
     private static final List<String> COMMANDS = List.of(GPIO_FIND_COMMAND, GPIO_GET_COMMAND, GPIO_SET_COMMAND);
 
-    private final String disabledReason;
-
     public GpioDRelayProvider() {
-        super(PROVIDER_ID);
-
-        disabledReason = COMMANDS.stream() //
+        super(PROVIDER_ID, COMMANDS.stream() //
                 .filter(command -> !new File(command).exists()) //
                 .findFirst() //
                 .map(command -> command + " does not exist") //
                 .orElse(null) //
-        ;
-
-        if (disabledReason != null) {
-            LOG.warn("{} - {}", PROVIDER_ID, disabledReason);
-        }
+        );
     }
 
     @Nonnull
     @Override
     public String getDescription() {
         return "Relays via gpiod utils: " + String.join(", ", COMMANDS);
-    }
-
-    @Nullable
-    @Override
-    public String getDisabledReason() {
-        return disabledReason;
     }
 
     @Nullable
@@ -87,11 +73,6 @@ public class GpioDRelayProvider extends AbstractPinBasedRelayProvider {
 
     @Override
     protected void changePin(String address, boolean active) {
-        if (disabledReason != null) {
-            LOG.warn("Cannot change pin {} to {} - {}", address, active, disabledReason);
-            return;
-        }
-
         String value = active ? "1" : "0";
         List<String> gpioFindResult = execute(GPIO_FIND_COMMAND, address);
         if (gpioFindResult.size() != 2) {
@@ -102,22 +83,8 @@ public class GpioDRelayProvider extends AbstractPinBasedRelayProvider {
 
     @Override
     protected boolean initPin(String address) {
-        if (disabledReason != null) {
-            LOG.warn("Cannot init pin {} - {}", address, disabledReason);
-            return false;
-        }
-
         changePin(address, false);
         return false;
-    }
-
-    @Override
-    protected void shutdown() {
-        if (disabledReason != null) {
-            return;
-        }
-
-        super.shutdown();
     }
 
     private List<String> execute(String... command) {
