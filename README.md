@@ -6,12 +6,14 @@ Application for controlling sprinklers using Raspberry Pi.
 
 * Licensed under the Apache License, Version 2.0
 * Web frontend to configure schedules
-* Sprinkler runtime can be reduced by amount of rain
+* Sprinkler runtime can be reduced by amount of rain or any other sensor value
 * Relay providers:
     * GPIO via gpiod utils (e.g. relay boards for Raspberry Pi)
+    * Remote relays using Tasmota Power command over http (e.g. ESP with relay board)
     * GPIO via `/sys/class/gpio` (deprecated)
 * Supported sensor providers, e.g. for determining rain:
     * [Hamburg Wasser](https://sri.hamburgwasser.de/)
+* Sensor values can be published via MQTT
 * Extend by implementing interfaces to support more relays and sensors:
     * [`RelayProvider`](src/main/java/de/hasait/sprinkler/service/relay/provider/RelayProvider.java)
     * [`SensorProvider`](src/main/java/de/hasait/sprinkler/service/sensor/provider/SensorProvider.java)
@@ -32,7 +34,15 @@ For Windows take a look [here](https://docs.spring.io/spring-boot/docs/current/r
     ```
 6) Create file `application.properties` in service folder and replace TODOs:
     ``` 
-    # Nothing here currently
+    ### Increase loglevel to analyze issues
+    # logging.level.de.hasait.sprinkler=DEBUG
+
+    ### For publishing sensor values via MQTT 
+    # sprinkler.mqtt.uri=tcp://your-mqtt-broker:1883
+    # sprinkler.mqtt.client_id=sprinkler
+    # sprinkler.mqtt.username=mqtt
+    # sprinkler.mqtt.password=secret
+    # sprinkler.mqtt.topic=sprinkler
     ```
 7) Create file `users.json` in service folder based on [users.json](users.json)
 
