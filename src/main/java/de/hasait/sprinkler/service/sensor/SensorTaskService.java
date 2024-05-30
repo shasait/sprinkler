@@ -6,6 +6,7 @@ import de.hasait.sprinkler.domain.sensor.SensorValuePO;
 import de.hasait.sprinkler.domain.sensor.SensorValueRepository;
 import de.hasait.sprinkler.service.sensor.provider.SensorProviderService;
 import de.hasait.sprinkler.service.sensor.provider.SensorValue;
+import de.hasait.sprinkler.service.sensor.publish.SensorValuePublisher;
 import de.hasait.sprinkler.util.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,11 +33,14 @@ public class SensorTaskService {
 
     private final ConcurrentHashMap<Long, List<ScheduledFuture<?>>> scheduledFutures = new ConcurrentHashMap<>();
 
-    public SensorTaskService(SensorRepository repository, SensorValueRepository valueRepository, SensorProviderService providerService, TaskScheduler taskScheduler) {
+    private final SensorValuePublisher sensorValuePublisher;
+
+    public SensorTaskService(SensorRepository repository, SensorValueRepository valueRepository, SensorProviderService providerService, TaskScheduler taskScheduler, SensorValuePublisher sensorValuePublisher) {
         this.repository = repository;
         this.valueRepository = valueRepository;
         this.providerService = providerService;
         this.taskScheduler = taskScheduler;
+        this.sensorValuePublisher = sensorValuePublisher;
 
         SensorPOListener.sensorTaskService = this;
 
@@ -93,6 +97,7 @@ public class SensorTaskService {
         SensorPO sensorPO = repository.findById(sensorId).orElseThrow();
         LOG.debug("Reading sensor {}...", sensorPO.getName());
         SensorValue sensorValue = providerService.obtainValue(sensorPO.getProviderId(), sensorPO.getProviderConfig());
+
         SensorValuePO sensorValuePO = new SensorValuePO();
         sensorValuePO.setSensor(sensorPO);
         LocalDateTime dateTime = sensorValue.getDateTime();
@@ -101,6 +106,13 @@ public class SensorTaskService {
         sensorValuePO.setIntValue(value);
         valueRepository.saveAndFlush(sensorValuePO);
         valueRepository.deleteAllBefore(LocalDateTime.now().minusMonths(2));
+
+        try {
+            sensorValuePublisher.publish(sensorValuePO);
+        } catch (Exception e) {
+            LOG.warn("SensorValuePublisher failed to publish", e);
+        }
+
         LOG.debug("Saved sensor value {} from {}", value, dateTime);
     }
 
