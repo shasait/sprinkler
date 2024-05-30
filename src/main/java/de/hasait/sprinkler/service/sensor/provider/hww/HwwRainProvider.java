@@ -136,7 +136,7 @@ public class HwwRainProvider implements SensorProvider {
                 .minusMinutes(2 * ROUND_TO_MINUTES) //
                 ;
         Map<String, String> queryParameters = new LinkedHashMap<>();
-        queryParameters.put("where", "ende > '" + formatter.format(dateTimeRounded) + "'");
+        queryParameters.put("where", "ende > timestamp '" + formatter.format(dateTimeRounded) + "'");
         queryParameters.put("geometry", configuration.getPositionX() + "," + configuration.getPositionY());
         queryParameters.put("geometryType", "esriGeometryPoint");
         queryParameters.put("inSR", Integer.toString(configuration.getSpatialReference()));
