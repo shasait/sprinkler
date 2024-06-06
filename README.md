@@ -2,7 +2,7 @@
 
 [![Maven Central](https://img.shields.io/maven-central/v/de.hasait.sprinkler/sprinkler.svg?label=Maven%20Central)](https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22de.hasait.sprinkler%22%20AND%20a%3A%22sprinkler%22)
 
-Application for controlling sprinklers using Raspberry Pi.
+Application for controlling sprinklers using ESP or Raspberry Pi.
 
 * Licensed under the Apache License, Version 2.0
 * Web frontend to configure schedules
