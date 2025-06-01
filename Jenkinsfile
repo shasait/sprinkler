@@ -69,6 +69,8 @@ node('linux') {
             def currentBranch
             def releaseTag
 
+            def deployOrInstall = 'install'
+
             stage('Checkout') {
                 checkout scm
 
@@ -89,6 +91,7 @@ node('linux') {
                 }
 
                 if (params.releaseVersion) {
+                    deployOrInstall = 'deploy'
                     releaseTag = "${params.releaseVersion}"
                     def msg = "Changing POM versions to release version ${params.releaseVersion}"
                     echo "\u27A1 ${msg}..."
@@ -105,7 +108,7 @@ node('linux') {
             stage('Deploy') {
                 try {
                     echo "\u27A1 Deploying project..."
-                    sh "${mvnCommand} deploy -Dmaven.test.failure.ignore=true"
+                    sh "${mvnCommand} ${deployOrInstall} -Dmaven.test.failure.ignore=true"
                 } catch (err) {
                     echo "\u27A1 Error: ${err}"
                     currentBuild.result = 'FAILURE'
