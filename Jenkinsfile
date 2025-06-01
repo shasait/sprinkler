@@ -69,7 +69,7 @@ node('linux') {
             def currentBranch
             def releaseTag
 
-            def deployOrInstall = 'install'
+            boolean mvnDeploy = false
 
             stage('Checkout') {
                 checkout scm
@@ -82,16 +82,22 @@ node('linux') {
                     currentBranch = sh(returnStdout: true, script: "git branch | grep \\* | cut -d ' ' -f2").trim()
                 }
                 echo "\u27A1 On branch ${currentBranch}..."
+            }
 
+            stage('ConfigureGit') {
                 if (params.releaseVersion || params.developmentVersion) {
                     echo "\u27A1 Configuring git..."
                     sh "git config user.name '${params.gitUserName}'"
                     sh "git config user.email '${params.gitUserEmail}'"
                     sh "git config --local credential.username '${params.gitUserName}'"
+                } else {
+                    echo "Skipping due to no version change"
                 }
+            }
 
+            stage('PrepareRelease') {
                 if (params.releaseVersion) {
-                    deployOrInstall = 'deploy'
+                    mvnDeploy = true
                     releaseTag = "${params.releaseVersion}"
                     def msg = "Changing POM versions to release version ${params.releaseVersion}"
                     echo "\u27A1 ${msg}..."
@@ -102,22 +108,47 @@ node('linux') {
                     def gitTagOptions = params.forceTag ? '-f' : ''
                     sh "git tag ${gitTagOptions} ${releaseTag}"
                     manager.addInfoBadge("Release ${params.releaseVersion}")
+                } else {
+                    echo "Skipping due to no releaseVersion provided"
                 }
             }
 
-            stage('Deploy') {
+            stage('Install') {
                 try {
-                    echo "\u27A1 Deploying project..."
-                    sh "${mvnCommand} ${deployOrInstall} -Dmaven.test.failure.ignore=true"
+                    echo "\u27A1 Installing project..."
+                    sh "${mvnCommand} install -Dmaven.test.failure.ignore=true"
                 } catch (err) {
                     echo "\u27A1 Error: ${err}"
                     currentBuild.result = 'FAILURE'
                     throw err
                 }
+            }
+
+            stage('Deploy') {
+                if (mvnDeploy) {
+                    try {
+                        echo "\u27A1 Deploying project..."
+                        sh "${mvnCommand} deploy -Dmaven.test.failure.ignore=true"
+                    } catch (err) {
+                        echo "\u27A1 Error: ${err}"
+                        currentBuild.result = 'FAILURE'
+                        throw err
+                    }
+                } else {
+                    echo "Skipping due to no releaseVersion provided"
+                }
+            }
+
+            stage('PushRelease') {
                 if (params.releaseVersion) {
                     echo "\u27A1 Pushing release tag ${releaseTag}..."
                     sh "git push -f origin tag ${releaseTag}"
+                } else {
+                    echo "Skipping due to no releaseVersion provided"
                 }
+            }
+
+            stage('ChangeDevelopmentVersion') {
                 if (params.developmentVersion) {
                     def msg = "Changing POM versions to development version ${params.developmentVersion}"
                     echo "\u27A1 ${msg}..."
@@ -126,6 +157,8 @@ node('linux') {
                     sh "find . -type f -name pom.xml -exec git add \\{\\} \\;"
                     sh "git commit -m '[Jenkinsfile] ${msg}'"
                     sh "git push origin ${currentBranch}"
+                } else {
+                    echo "Skipping due to no developmentVersion provided"
                 }
             }
 
