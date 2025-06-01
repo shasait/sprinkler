@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 by Sebastian Hasait (sebastian at hasait dot de)
+ * Copyright (C) 2025 by Sebastian Hasait (sebastian at hasait dot de)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ package de.hasait.sprinkler.ui.schedule;
 
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.data.renderer.TextRenderer;
-import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
 import com.vaadin.flow.spring.annotation.SpringComponent;
@@ -42,12 +41,9 @@ import java.util.concurrent.TimeUnit;
 @PermitAll
 @Route(value = "schedules", layout = MainLayout.class)
 @RouteAlias(value = "", layout = MainLayout.class)
-@PageTitle(SchedulesView.TITLE)
 @SpringComponent
 @UIScope
 public class SchedulesView extends AbstractCrudGrid<SchedulePO, ScheduleRepository, ScheduleForm> {
-
-    public static final String TITLE = "Schedules";
 
     public SchedulesView(ScheduleRepository repository, ScheduleForm beanForm) {
         super(SchedulePO.class, repository, 2, beanForm);

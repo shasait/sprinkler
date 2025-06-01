@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 by Sebastian Hasait (sebastian at hasait dot de)
+ * Copyright (C) 2025 by Sebastian Hasait (sebastian at hasait dot de)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 package de.hasait.sprinkler.ui.sensor;
 
 
-import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
@@ -32,12 +31,9 @@ import jakarta.annotation.security.PermitAll;
  */
 @PermitAll
 @Route(value = "sensorproviders", layout = MainLayout.class)
-@PageTitle(SensorProvidersView.TITLE)
 @SpringComponent
 @UIScope
 public class SensorProvidersView extends AbstractProvidersView<SensorProvider, SensorProviderService> {
-
-    public static final String TITLE = "Sensor Providers";
 
     public SensorProvidersView(SensorProviderService providerService) {
         super(SensorProvider.class, providerService);

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 by Sebastian Hasait (sebastian at hasait dot de)
+ * Copyright (C) 2025 by Sebastian Hasait (sebastian at hasait dot de)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ package de.hasait.sprinkler.ui.relay;
 
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.data.selection.SelectionEvent;
-import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
@@ -39,12 +38,9 @@ import org.slf4j.LoggerFactory;
  */
 @PermitAll
 @Route(value = "relays", layout = MainLayout.class)
-@PageTitle(RelaysView.TITLE)
 @SpringComponent
 @UIScope
 public class RelaysView extends AbstractCrudGrid<RelayPO, RelayRepository, RelayForm> {
-
-    public static final String TITLE = "Relays";
 
     private static final Logger LOG = LoggerFactory.getLogger(RelaysView.class);
 

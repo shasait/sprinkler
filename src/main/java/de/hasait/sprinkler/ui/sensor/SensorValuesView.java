@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 by Sebastian Hasait (sebastian at hasait dot de)
+ * Copyright (C) 2025 by Sebastian Hasait (sebastian at hasait dot de)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ package de.hasait.sprinkler.ui.sensor;
 
 
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
@@ -34,12 +33,9 @@ import jakarta.annotation.security.PermitAll;
  */
 @PermitAll
 @Route(value = "sensorvalues", layout = MainLayout.class)
-@PageTitle(SensorValuesView.TITLE)
 @SpringComponent
 @UIScope
 public class SensorValuesView extends AbstractGridView<SensorValuePO> {
-
-    public static final String TITLE = "Sensor Values";
 
     private final SensorValueRepository repository;
 

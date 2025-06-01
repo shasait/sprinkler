@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 by Sebastian Hasait (sebastian at hasait dot de)
+ * Copyright (C) 2025 by Sebastian Hasait (sebastian at hasait dot de)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,14 +17,13 @@
 package de.hasait.sprinkler.ui.relay;
 
 
-import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
-import de.hasait.sprinkler.service.relay.provider.RelayProvider;
-import de.hasait.sprinkler.service.relay.provider.RelayProviderService;
 import de.hasait.common.ui.AbstractProvidersView;
 import de.hasait.common.ui.MainLayout;
+import de.hasait.sprinkler.service.relay.provider.RelayProvider;
+import de.hasait.sprinkler.service.relay.provider.RelayProviderService;
 import jakarta.annotation.security.PermitAll;
 
 /**
@@ -32,12 +31,9 @@ import jakarta.annotation.security.PermitAll;
  */
 @PermitAll
 @Route(value = "relayproviders", layout = MainLayout.class)
-@PageTitle(RelayProvidersView.TITLE)
 @SpringComponent
 @UIScope
 public class RelayProvidersView extends AbstractProvidersView<RelayProvider, RelayProviderService> {
-
-    public static final String TITLE = "Relay Providers";
 
     public RelayProvidersView(RelayProviderService providerService) {
         super(RelayProvider.class, providerService);
