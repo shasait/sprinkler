@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.hasait.sprinkler.service;
+package de.hasait.common.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 by Sebastian Hasait (sebastian at hasait dot de)
+ * Copyright (C) 2024 by Sebastian Hasait (sebastian at hasait dot de)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,18 @@
  * limitations under the License.
  */
 
-package de.hasait.sprinkler.service.sensor.provider;
+package de.hasait.common.domain;
 
-import de.hasait.common.service.Provider;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.NoRepositoryBean;
 
-import javax.annotation.Nonnull;
+@NoRepositoryBean
+public interface SearchableRepository<PO, ID> extends JpaRepository<PO, ID> {
 
-/**
- *
- */
-public interface SensorProvider extends Provider {
+    Page<PO> search(String search, Pageable pageable);
 
-    SensorValue obtainValue(@Nonnull String config);
+    long searchCount(String search);
 
 }

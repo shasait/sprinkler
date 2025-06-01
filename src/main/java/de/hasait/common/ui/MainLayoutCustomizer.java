@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 by Sebastian Hasait (sebastian at hasait dot de)
+ * Copyright (C) 2024 by Sebastian Hasait (sebastian at hasait dot de)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,12 @@
  * limitations under the License.
  */
 
-package de.hasait.sprinkler.service.sensor.provider;
+package de.hasait.common.ui;
 
-import de.hasait.common.service.Provider;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
-import javax.annotation.Nonnull;
+public interface MainLayoutCustomizer {
 
-/**
- *
- */
-public interface SensorProvider extends Provider {
-
-    SensorValue obtainValue(@Nonnull String config);
+    void populateDrawer(VerticalLayout verticalLayout);
 
 }

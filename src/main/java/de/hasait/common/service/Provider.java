@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 by Sebastian Hasait (sebastian at hasait dot de)
+ * Copyright (C) 2024 by Sebastian Hasait (sebastian at hasait dot de)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,23 @@
  * limitations under the License.
  */
 
-package de.hasait.sprinkler.service.sensor.provider;
-
-import de.hasait.common.service.Provider;
+package de.hasait.common.service;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-/**
- *
- */
-public interface SensorProvider extends Provider {
+public interface Provider {
 
-    SensorValue obtainValue(@Nonnull String config);
+    @Nonnull
+    String getId();
+
+    @Nonnull
+    String getDescription();
+
+    @Nullable
+    String getDisabledReason();
+
+    @Nullable
+    String validateConfig(@Nullable String config);
 
 }

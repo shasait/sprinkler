@@ -20,7 +20,7 @@ import com.google.common.net.UrlEscapers;
 import com.google.gson.Gson;
 import de.hasait.sprinkler.service.sensor.provider.SensorProvider;
 import de.hasait.sprinkler.service.sensor.provider.SensorValue;
-import de.hasait.sprinkler.util.Util;
+import de.hasait.common.util.Util;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

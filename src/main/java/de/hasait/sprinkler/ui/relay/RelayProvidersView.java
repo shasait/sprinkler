@@ -23,8 +23,8 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import de.hasait.sprinkler.service.relay.provider.RelayProvider;
 import de.hasait.sprinkler.service.relay.provider.RelayProviderService;
-import de.hasait.sprinkler.ui.AbstractProvidersView;
-import de.hasait.sprinkler.ui.MainLayout;
+import de.hasait.common.ui.AbstractProvidersView;
+import de.hasait.common.ui.MainLayout;
 import jakarta.annotation.security.PermitAll;
 
 /**
@@ -40,7 +40,7 @@ public class RelayProvidersView extends AbstractProvidersView<RelayProvider, Rel
     public static final String TITLE = "Relay Providers";
 
     public RelayProvidersView(RelayProviderService providerService) {
-        super(providerService);
+        super(RelayProvider.class, providerService);
     }
 
 }

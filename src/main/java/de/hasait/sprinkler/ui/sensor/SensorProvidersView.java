@@ -21,10 +21,10 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
+import de.hasait.common.ui.AbstractProvidersView;
+import de.hasait.common.ui.MainLayout;
 import de.hasait.sprinkler.service.sensor.provider.SensorProvider;
 import de.hasait.sprinkler.service.sensor.provider.SensorProviderService;
-import de.hasait.sprinkler.ui.AbstractProvidersView;
-import de.hasait.sprinkler.ui.MainLayout;
 import jakarta.annotation.security.PermitAll;
 
 /**
@@ -40,7 +40,7 @@ public class SensorProvidersView extends AbstractProvidersView<SensorProvider, S
     public static final String TITLE = "Sensor Providers";
 
     public SensorProvidersView(SensorProviderService providerService) {
-        super(providerService);
+        super(SensorProvider.class, providerService);
     }
 
 }

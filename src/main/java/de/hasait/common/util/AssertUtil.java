@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.hasait.sprinkler.util;
+package de.hasait.common.util;
 
 import com.google.common.base.Splitter;
 import org.apache.commons.lang3.StringUtils;

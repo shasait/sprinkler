@@ -16,7 +16,7 @@
 
 package de.hasait.sprinkler.service.sensor.provider;
 
-import de.hasait.sprinkler.service.AbstractProviderService;
+import de.hasait.common.service.AbstractProviderService;
 import org.springframework.stereotype.Service;
 
 /**

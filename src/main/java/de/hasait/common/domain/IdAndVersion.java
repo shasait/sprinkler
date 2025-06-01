@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 by Sebastian Hasait (sebastian at hasait dot de)
+ * Copyright (C) 2024 by Sebastian Hasait (sebastian at hasait dot de)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,14 @@
  * limitations under the License.
  */
 
-package de.hasait.sprinkler.service.sensor.provider;
+package de.hasait.common.domain;
 
-import de.hasait.common.service.Provider;
+public interface IdAndVersion {
 
-import javax.annotation.Nonnull;
+    Long getId();
 
-/**
- *
- */
-public interface SensorProvider extends Provider {
+    long getVersion();
 
-    SensorValue obtainValue(@Nonnull String config);
+    void setVersion(long version);
 
 }

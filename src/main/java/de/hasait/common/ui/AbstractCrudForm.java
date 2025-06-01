@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.hasait.sprinkler.ui;
+package de.hasait.common.ui;
 
 
 import com.vaadin.flow.component.ClickEvent;
@@ -29,8 +29,8 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.BinderValidationStatus;
 import com.vaadin.flow.data.binder.StatusChangeEvent;
-import de.hasait.sprinkler.domain.SearchableRepository;
-import de.hasait.sprinkler.service.IdAndVersion;
+import de.hasait.common.domain.SearchableRepository;
+import de.hasait.common.domain.IdAndVersion;
 import jakarta.annotation.PostConstruct;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

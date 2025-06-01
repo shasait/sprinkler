@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package de.hasait.sprinkler.ui;
+package de.hasait.common.ui;
 
 
 import com.vaadin.flow.component.grid.Grid;
-import de.hasait.sprinkler.service.AbstractProviderService;
-import de.hasait.sprinkler.service.Provider;
+import de.hasait.common.service.AbstractProviderService;
+import de.hasait.common.service.Provider;
 
 /**
  *
@@ -28,8 +28,8 @@ public class AbstractProvidersView<P extends Provider, S extends AbstractProvide
 
     private final S providerService;
 
-    public AbstractProvidersView(S providerService) {
-        super(1);
+    public AbstractProvidersView(Class<P> providerClass, S providerService) {
+        super(providerClass, 1);
 
         this.providerService = providerService;
 

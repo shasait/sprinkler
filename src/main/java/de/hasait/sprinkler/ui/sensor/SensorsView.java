@@ -22,11 +22,11 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
+import de.hasait.common.ui.AbstractCrudGrid;
+import de.hasait.common.ui.MainLayout;
 import de.hasait.sprinkler.domain.sensor.SensorPO;
 import de.hasait.sprinkler.domain.sensor.SensorRepository;
 import de.hasait.sprinkler.service.sensor.provider.SensorProviderService;
-import de.hasait.sprinkler.ui.AbstractCrudGrid;
-import de.hasait.sprinkler.ui.MainLayout;
 import de.hasait.sprinkler.ui.UiConstants;
 import jakarta.annotation.security.PermitAll;
 
@@ -45,7 +45,7 @@ public class SensorsView extends AbstractCrudGrid<SensorPO, SensorRepository, Se
     private final SensorProviderService providerService;
 
     public SensorsView(SensorRepository repository, SensorForm beanForm, SensorProviderService providerService) {
-        super(3, repository, beanForm);
+        super(SensorPO.class, repository, 3, beanForm);
 
         this.providerService = providerService;
 

@@ -24,12 +24,12 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
+import de.hasait.common.ui.AbstractCrudGrid;
+import de.hasait.common.ui.MainLayout;
+import de.hasait.common.util.Util;
 import de.hasait.sprinkler.domain.schedule.SchedulePO;
 import de.hasait.sprinkler.domain.schedule.ScheduleRepository;
-import de.hasait.sprinkler.ui.AbstractCrudGrid;
-import de.hasait.sprinkler.ui.MainLayout;
 import de.hasait.sprinkler.ui.UiConstants;
-import de.hasait.sprinkler.util.Util;
 import jakarta.annotation.security.PermitAll;
 import org.apache.commons.lang3.StringUtils;
 
@@ -50,7 +50,7 @@ public class SchedulesView extends AbstractCrudGrid<SchedulePO, ScheduleReposito
     public static final String TITLE = "Schedules";
 
     public SchedulesView(ScheduleRepository repository, ScheduleForm beanForm) {
-        super(2, repository, beanForm);
+        super(SchedulePO.class, repository, 2, beanForm);
 
         Grid.Column<SchedulePO> enabledColumn = beanGrid.addColumn(SchedulePO::isEnabled);
         enabledColumn.setHeader(UiConstants.CAPTION_ENABLED);

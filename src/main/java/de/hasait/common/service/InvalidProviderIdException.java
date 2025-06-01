@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 by Sebastian Hasait (sebastian at hasait dot de)
+ * Copyright (C) 2024 by Sebastian Hasait (sebastian at hasait dot de)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,29 +14,12 @@
  * limitations under the License.
  */
 
-package de.hasait.sprinkler.util;
+package de.hasait.common.service;
 
-/**
- *
- */
-public class AssertionException extends RuntimeException {
+public class InvalidProviderIdException extends RuntimeException {
 
-    private static final long serialVersionUID = 1L;
-
-    public AssertionException() {
-        super();
-    }
-
-    public AssertionException(final String pMessage) {
-        super(pMessage);
-    }
-
-    public AssertionException(final String pMessage, final Throwable pCause) {
-        super(pMessage, pCause);
-    }
-
-    public AssertionException(final Throwable pCause) {
-        super(pCause);
+    public InvalidProviderIdException(String message) {
+        super(message);
     }
 
 }

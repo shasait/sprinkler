@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.hasait.sprinkler.util;
+package de.hasait.common.util;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Future;
@@ -35,6 +36,8 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class Util {
+
+    public static final Random RANDOM = new Random();
 
     private static final List<Pair<Long, String>> UNITS;
 

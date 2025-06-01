@@ -21,7 +21,7 @@ import de.hasait.sprinkler.domain.schedule.ScheduleRepository;
 import de.hasait.sprinkler.domain.sensor.SensorPO;
 import de.hasait.sprinkler.domain.sensor.SensorValuePO;
 import de.hasait.sprinkler.service.sensor.SensorService;
-import de.hasait.sprinkler.util.ValueWithExplanation;
+import de.hasait.common.util.ValueWithExplanation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

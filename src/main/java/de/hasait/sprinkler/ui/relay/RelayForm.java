@@ -28,7 +28,7 @@ import com.vaadin.flow.spring.annotation.UIScope;
 import de.hasait.sprinkler.domain.relay.RelayPO;
 import de.hasait.sprinkler.domain.relay.RelayRepository;
 import de.hasait.sprinkler.service.relay.provider.RelayProviderService;
-import de.hasait.sprinkler.ui.AbstractCrudForm;
+import de.hasait.common.ui.AbstractCrudForm;
 import de.hasait.sprinkler.ui.UiConstants;
 
 /**

@@ -22,11 +22,11 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
+import de.hasait.common.ui.AbstractGridView;
+import de.hasait.common.ui.JpaRepositoryDataProvider;
+import de.hasait.common.ui.MainLayout;
 import de.hasait.sprinkler.domain.schedule.ScheduleLogPO;
 import de.hasait.sprinkler.domain.schedule.ScheduleLogRepository;
-import de.hasait.sprinkler.ui.AbstractGridView;
-import de.hasait.sprinkler.ui.JpaRepositoryDataProvider;
-import de.hasait.sprinkler.ui.MainLayout;
 import de.hasait.sprinkler.ui.UiConstants;
 import jakarta.annotation.security.PermitAll;
 
@@ -47,7 +47,7 @@ public class ScheduleLogsView extends AbstractGridView<ScheduleLogPO> {
     private final JpaRepositoryDataProvider<ScheduleLogPO, ScheduleLogRepository> dataProvider;
 
     public ScheduleLogsView(ScheduleLogRepository repository) {
-        super(1);
+        super(ScheduleLogPO.class, 1);
 
         this.repository = repository;
         this.dataProvider = new JpaRepositoryDataProvider<>(repository);

@@ -16,7 +16,7 @@
 
 package de.hasait.sprinkler.service.relay.provider;
 
-import de.hasait.sprinkler.service.AbstractProviderService;
+import de.hasait.common.service.AbstractProviderService;
 import org.springframework.stereotype.Service;
 
 /**

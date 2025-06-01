@@ -18,9 +18,8 @@ package de.hasait.sprinkler.domain.schedule;
 
 import de.hasait.sprinkler.domain.relay.RelayPO;
 import de.hasait.sprinkler.domain.sensor.SensorPO;
-import de.hasait.sprinkler.service.IdAndVersion;
+import de.hasait.common.domain.IdAndVersion;
 import de.hasait.sprinkler.service.schedule.SchedulePOListener;
-import de.hasait.sprinkler.util.Util;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -36,9 +35,7 @@ import jakarta.persistence.Version;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import org.springframework.scheduling.support.CronExpression;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 

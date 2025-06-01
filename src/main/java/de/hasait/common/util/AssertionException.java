@@ -14,17 +14,29 @@
  * limitations under the License.
  */
 
-package de.hasait.sprinkler.service.sensor.provider;
-
-import de.hasait.common.service.Provider;
-
-import javax.annotation.Nonnull;
+package de.hasait.common.util;
 
 /**
  *
  */
-public interface SensorProvider extends Provider {
+public class AssertionException extends RuntimeException {
 
-    SensorValue obtainValue(@Nonnull String config);
+    private static final long serialVersionUID = 1L;
+
+    public AssertionException() {
+        super();
+    }
+
+    public AssertionException(final String message) {
+        super(message);
+    }
+
+    public AssertionException(final String message, final Throwable cause) {
+        super(message, cause);
+    }
+
+    public AssertionException(final Throwable cause) {
+        super(cause);
+    }
 
 }

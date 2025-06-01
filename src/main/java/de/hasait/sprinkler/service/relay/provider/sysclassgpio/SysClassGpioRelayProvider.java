@@ -17,7 +17,7 @@
 package de.hasait.sprinkler.service.relay.provider.sysclassgpio;
 
 import de.hasait.sprinkler.service.relay.provider.AbstractPinBasedRelayProvider;
-import de.hasait.sprinkler.util.MessageFormatUtil;
+import de.hasait.common.util.MessageFormatUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

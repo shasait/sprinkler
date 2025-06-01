@@ -16,7 +16,7 @@
 
 package de.hasait.sprinkler.domain.sensor;
 
-import de.hasait.sprinkler.service.IdAndVersion;
+import de.hasait.common.domain.IdAndVersion;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

@@ -22,11 +22,11 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
+import de.hasait.common.ui.AbstractGridView;
+import de.hasait.common.ui.JpaRepositoryDataProvider;
+import de.hasait.common.ui.MainLayout;
 import de.hasait.sprinkler.domain.sensor.SensorValuePO;
 import de.hasait.sprinkler.domain.sensor.SensorValueRepository;
-import de.hasait.sprinkler.ui.AbstractGridView;
-import de.hasait.sprinkler.ui.JpaRepositoryDataProvider;
-import de.hasait.sprinkler.ui.MainLayout;
 import jakarta.annotation.security.PermitAll;
 
 /**
@@ -46,7 +46,7 @@ public class SensorValuesView extends AbstractGridView<SensorValuePO> {
     private final JpaRepositoryDataProvider<SensorValuePO, SensorValueRepository> dataProvider;
 
     public SensorValuesView(SensorValueRepository repository) {
-        super(1);
+        super(SensorValuePO.class, 1);
 
         this.repository = repository;
         this.dataProvider = new JpaRepositoryDataProvider<>(repository);

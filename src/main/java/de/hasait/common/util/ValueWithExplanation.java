@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 by Sebastian Hasait (sebastian at hasait dot de)
+ * Copyright (C) 2024 by Sebastian Hasait (sebastian at hasait dot de)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,24 @@
  * limitations under the License.
  */
 
-package de.hasait.sprinkler.service.sensor.provider;
+package de.hasait.common.util;
 
-import de.hasait.common.service.Provider;
+public class ValueWithExplanation<T> {
 
-import javax.annotation.Nonnull;
+    private final T value;
+    private final String explanation;
 
-/**
- *
- */
-public interface SensorProvider extends Provider {
+    public ValueWithExplanation(T value, String explanation) {
+        this.value = value;
+        this.explanation = explanation;
+    }
 
-    SensorValue obtainValue(@Nonnull String config);
+    public T getValue() {
+        return value;
+    }
+
+    public String getExplanation() {
+        return explanation;
+    }
 
 }

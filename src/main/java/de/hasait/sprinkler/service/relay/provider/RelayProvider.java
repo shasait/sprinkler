@@ -16,7 +16,7 @@
 
 package de.hasait.sprinkler.service.relay.provider;
 
-import de.hasait.sprinkler.service.Provider;
+import de.hasait.common.service.Provider;
 
 import javax.annotation.Nonnull;
 

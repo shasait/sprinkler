@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.hasait.sprinkler.util;
+package de.hasait.common.util;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;

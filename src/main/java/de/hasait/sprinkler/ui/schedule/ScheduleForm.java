@@ -32,14 +32,14 @@ import de.hasait.sprinkler.domain.schedule.SchedulePO;
 import de.hasait.sprinkler.domain.schedule.ScheduleRepository;
 import de.hasait.sprinkler.domain.sensor.SensorPO;
 import de.hasait.sprinkler.domain.sensor.SensorRepository;
-import de.hasait.sprinkler.service.InvalidProviderIdException;
+import de.hasait.common.service.InvalidProviderIdException;
 import de.hasait.sprinkler.service.schedule.ScheduleService;
-import de.hasait.sprinkler.ui.AbstractCrudForm;
-import de.hasait.sprinkler.ui.JpaRepositoryDataProvider;
+import de.hasait.common.ui.AbstractCrudForm;
+import de.hasait.common.ui.JpaRepositoryDataProvider;
 import de.hasait.sprinkler.ui.UiConstants;
-import de.hasait.sprinkler.ui.widget.CronWidget;
-import de.hasait.sprinkler.util.Util;
-import de.hasait.sprinkler.util.ValueWithExplanation;
+import de.hasait.common.ui.widget.CronWidget;
+import de.hasait.common.util.Util;
+import de.hasait.common.util.ValueWithExplanation;
 
 import java.util.concurrent.TimeUnit;
 

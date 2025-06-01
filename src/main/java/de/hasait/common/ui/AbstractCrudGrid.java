@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 by Sebastian Hasait (sebastian at hasait dot de)
+ * Copyright (C) 2024 by Sebastian Hasait (sebastian at hasait dot de)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
-package de.hasait.sprinkler.ui;
+package de.hasait.common.ui;
 
 
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.data.selection.SelectionEvent;
-import de.hasait.sprinkler.domain.SearchableRepository;
-import de.hasait.sprinkler.service.IdAndVersion;
+import de.hasait.common.domain.IdAndVersion;
+import de.hasait.common.domain.SearchableRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.lang.reflect.InvocationTargetException;
 
 /**
  *
@@ -31,13 +33,15 @@ public abstract class AbstractCrudGrid<PO extends IdAndVersion, R extends Search
 
     private static final Logger LOG = LoggerFactory.getLogger(AbstractCrudGrid.class);
 
+    private final Class<PO> poClass;
     private final R repository;
-    private final BF crudForm;
     private final JpaRepositoryDataProvider<PO, R> dataProvider;
+    private final BF crudForm;
 
-    public AbstractCrudGrid(int columns, R repository, BF crudForm) {
-        super(columns);
+    public AbstractCrudGrid(Class<PO> poClass, R repository, int columns, BF crudForm) {
+        super(poClass, columns);
 
+        this.poClass = poClass;
         this.repository = repository;
         this.crudForm = crudForm;
 
@@ -49,12 +53,23 @@ public abstract class AbstractCrudGrid<PO extends IdAndVersion, R extends Search
         Grid.Column<PO> versionColumn = beanGrid.addColumn(IdAndVersion::getVersion);
         versionColumn.setHeader("Version");
 
+        customizeCrudForm(crudForm);
         add(crudForm);
 
         crudForm.addListener(this::updateGrid);
     }
 
-    protected abstract PO newPO();
+    protected void customizeCrudForm(BF crudForm) {
+        // nop
+    }
+
+    protected PO newPO() {
+        try {
+            return poClass.getDeclaredConstructor().newInstance();
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     protected void onGridSelectionChanged(SelectionEvent<?, PO> event) {
         super.onGridSelectionChanged(event);

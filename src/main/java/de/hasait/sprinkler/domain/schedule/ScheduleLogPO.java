@@ -16,8 +16,8 @@
 
 package de.hasait.sprinkler.domain.schedule;
 
-import de.hasait.sprinkler.service.IdAndVersion;
-import de.hasait.sprinkler.util.Util;
+import de.hasait.common.domain.IdAndVersion;
+import de.hasait.common.util.Util;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

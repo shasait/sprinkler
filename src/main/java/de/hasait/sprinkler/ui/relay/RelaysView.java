@@ -23,12 +23,12 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
+import de.hasait.common.ui.AbstractCrudGrid;
+import de.hasait.common.ui.MainLayout;
 import de.hasait.sprinkler.domain.relay.RelayPO;
 import de.hasait.sprinkler.domain.relay.RelayRepository;
 import de.hasait.sprinkler.service.relay.provider.RelayProvider;
 import de.hasait.sprinkler.service.relay.provider.RelayProviderService;
-import de.hasait.sprinkler.ui.AbstractCrudGrid;
-import de.hasait.sprinkler.ui.MainLayout;
 import de.hasait.sprinkler.ui.UiConstants;
 import jakarta.annotation.security.PermitAll;
 import org.slf4j.Logger;
@@ -53,7 +53,7 @@ public class RelaysView extends AbstractCrudGrid<RelayPO, RelayRepository, Relay
     private final RelayProviderService relayProviderService;
 
     public RelaysView(RelayRepository repository, RelayForm beanForm, TestForm testForm, RelayProviderService relayProviderService) {
-        super(3, repository, beanForm);
+        super(RelayPO.class, repository, 3, beanForm);
 
         this.testForm = testForm;
         this.relayProviderService = relayProviderService;

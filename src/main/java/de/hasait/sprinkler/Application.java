@@ -17,17 +17,17 @@
 package de.hasait.sprinkler;
 
 import com.vaadin.flow.component.page.AppShellConfigurator;
+import com.vaadin.flow.spring.annotation.EnableVaadin;
 import com.vaadin.flow.theme.Theme;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan(basePackages = "de.hasait")
+@ComponentScan(basePackages = {"de.hasait.common", "de.hasait.sprinkler"})
+@EnableVaadin(value = {"de.hasait.common", "de.hasait.sprinkler"})
 @Theme(value = "sprinkler")
 public class Application implements AppShellConfigurator {
-
-    public static final String TITLE = "Sprinkler";
 
     public static void main(String[] mainArgs) {
         SpringApplication.run(Application.class, mainArgs);

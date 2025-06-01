@@ -17,8 +17,8 @@
 package de.hasait.sprinkler.service.relay.provider.taspow;
 
 import de.hasait.sprinkler.service.relay.provider.AbstractPinBasedRelayProvider;
-import de.hasait.sprinkler.util.MessageFormatUtil;
-import de.hasait.sprinkler.util.Util;
+import de.hasait.common.util.MessageFormatUtil;
+import de.hasait.common.util.Util;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
