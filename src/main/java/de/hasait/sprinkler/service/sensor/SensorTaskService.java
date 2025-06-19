@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 by Sebastian Hasait (sebastian at hasait dot de)
+ * Copyright (C) 2025 by Sebastian Hasait (sebastian at hasait dot de)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 package de.hasait.sprinkler.service.sensor;
 
+import de.hasait.common.util.Util;
 import de.hasait.sprinkler.domain.sensor.SensorPO;
 import de.hasait.sprinkler.domain.sensor.SensorRepository;
 import de.hasait.sprinkler.domain.sensor.SensorValuePO;
@@ -23,7 +24,6 @@ import de.hasait.sprinkler.domain.sensor.SensorValueRepository;
 import de.hasait.sprinkler.service.sensor.provider.SensorProviderService;
 import de.hasait.sprinkler.service.sensor.provider.SensorValue;
 import de.hasait.sprinkler.service.sensor.publish.SensorValuePublisher;
-import de.hasait.common.util.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.TaskScheduler;
@@ -116,6 +116,7 @@ public class SensorTaskService {
 
         SensorValuePO sensorValuePO = new SensorValuePO();
         sensorValuePO.setSensor(sensorPO);
+        sensorValuePO.setInsertDateTime(LocalDateTime.now());
         LocalDateTime dateTime = sensorValue.getDateTime();
         sensorValuePO.setDateTime(dateTime);
         int value = sensorValue.getValue();

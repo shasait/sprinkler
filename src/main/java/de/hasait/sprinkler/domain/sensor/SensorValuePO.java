@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 by Sebastian Hasait (sebastian at hasait dot de)
+ * Copyright (C) 2025 by Sebastian Hasait (sebastian at hasait dot de)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,6 +45,9 @@ public class SensorValuePO implements IdAndVersion {
     @ManyToOne
     @JoinColumn(name = "SENSOR_ID", nullable = false)
     private SensorPO sensor;
+
+    @Column(name = "INSERT_DATE_TIME", nullable = false)
+    private LocalDateTime insertDateTime;
 
     @Column(name = "DATE_TIME", nullable = false)
     private LocalDateTime dateTime;
@@ -93,6 +96,14 @@ public class SensorValuePO implements IdAndVersion {
 
     public void setIntValue(int intValue) {
         this.intValue = intValue;
+    }
+
+    public LocalDateTime getInsertDateTime() {
+        return insertDateTime;
+    }
+
+    public void setInsertDateTime(LocalDateTime insertDateTime) {
+        this.insertDateTime = insertDateTime;
     }
 
 }

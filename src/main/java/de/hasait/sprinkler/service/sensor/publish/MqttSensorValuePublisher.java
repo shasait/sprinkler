@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 by Sebastian Hasait (sebastian at hasait dot de)
+ * Copyright (C) 2025 by Sebastian Hasait (sebastian at hasait dot de)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class MqttSensorValuePublisher implements SensorValuePublisher {
 
@@ -34,6 +36,8 @@ public class MqttSensorValuePublisher implements SensorValuePublisher {
     private final MqttConfiguration configuration;
 
     private final IMqttClient client;
+
+    private final AtomicReference<LocalDateTime> lastPublishedHolder = new AtomicReference<>();
 
     public MqttSensorValuePublisher(MqttConfiguration configuration) throws MqttException {
         this.configuration = configuration;
@@ -52,9 +56,21 @@ public class MqttSensorValuePublisher implements SensorValuePublisher {
 
     @Override
     public void publish(SensorValuePO value) throws Exception {
+        while (true) {
+            LocalDateTime lastPublished = this.lastPublishedHolder.get();
+
+            if (lastPublished != null && !lastPublished.isBefore(value.getDateTime())) {
+                LOG.debug("Skipping MQTT as value is from the past: {}, {}", value.getDateTime(), value.getIntValue());
+                return;
+            }
+
+            if (lastPublishedHolder.compareAndSet(lastPublished, value.getDateTime())) {
+                break;
+            }
+        }
+
         String messageContent = "{\"value\":" + value.getIntValue() + "}";
         String topic = configuration.getTopic() + "/" + value.getSensor().getName();
-
         LOG.debug("Publishing MQTT to topic {}: {}", topic, messageContent);
 
         MqttMessage msg = new MqttMessage(messageContent.getBytes(StandardCharsets.UTF_8));

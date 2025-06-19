@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 by Sebastian Hasait (sebastian at hasait dot de)
+ * Copyright (C) 2025 by Sebastian Hasait (sebastian at hasait dot de)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ public class SensorService {
     }
 
     public int determineChange(SensorPO sensorPO) {
-        List<SensorValuePO> list = valueRepository.findTop2BySensorOrderByIdDesc(sensorPO);
+        List<SensorValuePO> list = valueRepository.findTop2BySensorOrderByDateTimeDesc(sensorPO);
         if (list.size() < 2) {
             return 0;
         }
@@ -50,7 +50,7 @@ public class SensorService {
     }
 
     public List<SensorValuePO> getLastValues(SensorPO sensorPO) {
-        return valueRepository.findTop2BySensorOrderByIdDesc(sensorPO);
+        return valueRepository.findTop2BySensorOrderByDateTimeDesc(sensorPO);
     }
 
 }

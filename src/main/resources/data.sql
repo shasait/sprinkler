@@ -12,7 +12,7 @@ insert into SENSOR (
     NEXT VALUE FOR SENSOR_SEQ, 1,
     'Local rain',
     'dummy', '100',
-    '0 */10 * * * *'
+    '*/20 * * * * *'
 );
 
 insert into SCHEDULE (

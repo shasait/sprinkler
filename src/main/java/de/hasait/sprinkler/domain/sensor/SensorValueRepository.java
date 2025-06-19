@@ -44,6 +44,6 @@ public interface SensorValueRepository extends SearchableRepository<SensorValueP
     @Query("DELETE FROM SensorValuePO v where v.dateTime < :dateTime")
     void deleteAllBefore(LocalDateTime dateTime);
 
-    List<SensorValuePO> findTop2BySensorOrderByIdDesc(SensorPO sensorPO);
+    List<SensorValuePO> findTop2BySensorOrderByDateTimeDesc(SensorPO sensorPO);
 
 }
