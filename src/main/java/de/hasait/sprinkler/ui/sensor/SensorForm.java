@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 by Sebastian Hasait (sebastian at hasait dot de)
+ * Copyright (C) 2025 by Sebastian Hasait (sebastian at hasait dot de)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package de.hasait.sprinkler.ui.sensor;
 
 
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -28,15 +29,15 @@ import com.vaadin.flow.data.binder.ValueContext;
 import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
+import de.hasait.common.service.InvalidProviderIdException;
+import de.hasait.common.ui.AbstractCrudForm;
+import de.hasait.common.ui.widget.CronWidget;
 import de.hasait.sprinkler.domain.sensor.SensorPO;
 import de.hasait.sprinkler.domain.sensor.SensorRepository;
 import de.hasait.sprinkler.domain.sensor.SensorValuePO;
 import de.hasait.sprinkler.service.sensor.SensorService;
-import de.hasait.common.service.InvalidProviderIdException;
 import de.hasait.sprinkler.service.sensor.provider.SensorProviderService;
-import de.hasait.common.ui.AbstractCrudForm;
 import de.hasait.sprinkler.ui.UiConstants;
-import de.hasait.common.ui.widget.CronWidget;
 
 import java.util.Iterator;
 
@@ -46,6 +47,9 @@ import java.util.Iterator;
 @SpringComponent
 @UIScope
 class SensorForm extends AbstractCrudForm<SensorPO, SensorRepository> {
+
+    @PropertyId("enabled")
+    public final Checkbox enabledField = new Checkbox(UiConstants.CAPTION_ENABLED);
 
     @PropertyId("name")
     public final TextField nameField = new TextField(UiConstants.CAPTION_NAME);
@@ -78,6 +82,8 @@ class SensorForm extends AbstractCrudForm<SensorPO, SensorRepository> {
 
     @Override
     protected void populateLayout() {
+        add(enabledField);
+
         add(nameField);
 
         providerIdComboBox.setItems(DataProvider.ofCollection(providerService.findAllIds()));

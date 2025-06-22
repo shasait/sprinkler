@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 by Sebastian Hasait (sebastian at hasait dot de)
+ * Copyright (C) 2025 by Sebastian Hasait (sebastian at hasait dot de)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,21 +35,21 @@ public class SchedulePOListener {
     public void postPersistSchedulePO(SchedulePO po) {
         LOG.debug("postPersistSchedulePO: {}", po);
 
-        scheduleTaskService.postPersistSchedulePO(po);
+        scheduleTaskService.postPersist(po);
     }
 
     @PostUpdate
     public void postUpdateSchedulePO(SchedulePO po) {
         LOG.debug("postUpdateSchedulePO: {}", po);
 
-        scheduleTaskService.postUpdateSchedulePO(po);
+        scheduleTaskService.postUpdatePO(po);
     }
 
     @PreRemove
     public void preRemoveSchedulePO(SchedulePO po) {
         LOG.debug("preRemoveSchedulePO: {}", po);
 
-        scheduleTaskService.preRemoveSchedulePO(po);
+        scheduleTaskService.preRemovePO(po);
     }
 
 }

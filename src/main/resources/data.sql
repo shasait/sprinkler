@@ -5,14 +5,14 @@ insert into RELAY (ID, VERSION, NAME, PROVIDER_ID, PROVIDER_CONFIG) values (NEXT
 
 insert into SENSOR (
     ID, VERSION,
-    NAME,
+    ENABLED, NAME,
     PROVIDER_ID, PROVIDER_CONFIG,
     CRON_EXPRESSION
 ) values (
     NEXT VALUE FOR SENSOR_SEQ, 1,
-    'Local rain',
-    'dummy', '100',
-    '*/20 * * * * *'
+    TRUE, 'Local rain',
+    'dummy', '100+-10',
+    '*/10 * * * * *'
 );
 
 insert into SCHEDULE (

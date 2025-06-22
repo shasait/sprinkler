@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 by Sebastian Hasait (sebastian at hasait dot de)
+ * Copyright (C) 2025 by Sebastian Hasait (sebastian at hasait dot de)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -111,7 +111,7 @@ public class Util {
         return Util.determineNextRelative(seed, Util.determineNext(cronExpressionString, seed), limit);
     }
 
-    public static void registerScheduledFuture(long id, ScheduledFuture<?> scheduledFuture, ConcurrentHashMap<Long, List<ScheduledFuture<?>>> scheduledFutures) {
+    public static <ID> void registerScheduledFuture(ID id, ScheduledFuture<?> scheduledFuture, ConcurrentHashMap<ID, List<ScheduledFuture<?>>> scheduledFutures) {
         List<ScheduledFuture<?>> futureList = scheduledFutures.computeIfAbsent(id, ignored -> new CopyOnWriteArrayList<>());
         futureList.removeIf(Future::isDone);
         futureList.add(scheduledFuture);

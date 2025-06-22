@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 by Sebastian Hasait (sebastian at hasait dot de)
+ * Copyright (C) 2025 by Sebastian Hasait (sebastian at hasait dot de)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 package de.hasait.sprinkler.service.sensor.provider.dummy;
 
+import de.hasait.common.util.Util;
 import de.hasait.sprinkler.service.sensor.provider.SensorProvider;
 import de.hasait.sprinkler.service.sensor.provider.SensorValue;
 import org.springframework.stereotype.Service;
@@ -23,12 +24,16 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.time.LocalDateTime;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
  */
 @Service
 public class DummySensorProvider implements SensorProvider {
+
+    private static final Pattern PATTERN = Pattern.compile("^([0-9]+)([+][-]([0-9]+))?$");
 
     @Nonnull
     @Override
@@ -51,17 +56,27 @@ public class DummySensorProvider implements SensorProvider {
     @Nullable
     @Override
     public String validateConfig(@Nonnull String config) {
-        try {
-            Integer.parseInt(config);
-        } catch (NumberFormatException e) {
-            return "Not a number";
+        if (PATTERN.matcher(config).matches()) {
+            return null;
         }
-        return null;
+        return "Not matching " + PATTERN.pattern();
     }
 
     @Override
     public SensorValue obtainValue(@Nonnull String config) {
-        return new SensorValue(LocalDateTime.now(), Integer.parseInt(config));
+        Matcher matcher = PATTERN.matcher(config);
+        if (!matcher.matches()) {
+            throw new RuntimeException("Invalid config: " + config);
+        }
+        int baseValue = Integer.parseInt(matcher.group(1));
+        int value;
+        if (matcher.groupCount() == 1) {
+            value = baseValue;
+        } else {
+            int variation = Integer.parseInt(matcher.group(3));
+            value = baseValue + Util.RANDOM.nextInt(2 * variation) - variation;
+        }
+        return new SensorValue(LocalDateTime.now(), value);
     }
 
 }

@@ -25,7 +25,6 @@ import de.hasait.common.ui.AbstractCrudGrid;
 import de.hasait.common.ui.MainLayout;
 import de.hasait.sprinkler.domain.sensor.SensorPO;
 import de.hasait.sprinkler.domain.sensor.SensorRepository;
-import de.hasait.sprinkler.service.sensor.provider.SensorProviderService;
 import de.hasait.sprinkler.ui.UiConstants;
 import jakarta.annotation.security.PermitAll;
 
@@ -38,12 +37,11 @@ import jakarta.annotation.security.PermitAll;
 @UIScope
 public class SensorsView extends AbstractCrudGrid<SensorPO, SensorRepository, SensorForm> {
 
-    private final SensorProviderService providerService;
-
-    public SensorsView(SensorRepository repository, SensorForm beanForm, SensorProviderService providerService) {
+    public SensorsView(SensorRepository repository, SensorForm beanForm) {
         super(SensorPO.class, repository, 3, beanForm);
 
-        this.providerService = providerService;
+        Grid.Column<SensorPO> enabledColumn = beanGrid.addColumn(SensorPO::isEnabled);
+        enabledColumn.setHeader(UiConstants.CAPTION_ENABLED);
 
         Grid.Column<SensorPO> name = beanGrid.addColumn(SensorPO::getName);
         name.setHeader(UiConstants.CAPTION_NAME);

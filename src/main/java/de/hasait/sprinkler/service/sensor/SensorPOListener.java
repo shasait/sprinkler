@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 by Sebastian Hasait (sebastian at hasait dot de)
+ * Copyright (C) 2025 by Sebastian Hasait (sebastian at hasait dot de)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,21 +35,21 @@ public class SensorPOListener {
     public void postPersistSchedulePO(SensorPO po) {
         LOG.debug("postPersistSchedulePO: {}", po);
 
-        sensorTaskService.postPersistSchedulePO(po);
+        sensorTaskService.postPersist(po);
     }
 
     @PostUpdate
     public void postUpdateSchedulePO(SensorPO po) {
         LOG.debug("postUpdateSchedulePO: {}", po);
 
-        sensorTaskService.postUpdateSchedulePO(po);
+        sensorTaskService.postUpdatePO(po);
     }
 
     @PreRemove
     public void preRemoveSchedulePO(SensorPO po) {
         LOG.debug("preRemoveSchedulePO: {}", po);
 
-        sensorTaskService.preRemoveSchedulePO(po);
+        sensorTaskService.preRemovePO(po);
     }
 
 }

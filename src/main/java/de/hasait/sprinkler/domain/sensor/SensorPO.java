@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 by Sebastian Hasait (sebastian at hasait dot de)
+ * Copyright (C) 2025 by Sebastian Hasait (sebastian at hasait dot de)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 package de.hasait.sprinkler.domain.sensor;
 
 import de.hasait.common.domain.IdAndVersion;
+import de.hasait.common.domain.SchedulablePO;
 import de.hasait.sprinkler.service.sensor.SensorPOListener;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -31,7 +32,7 @@ import jakarta.validation.constraints.Size;
 @Entity
 @Table(name = "SENSOR")
 @EntityListeners(SensorPOListener.class)
-public class SensorPO implements IdAndVersion {
+public class SensorPO implements IdAndVersion, SchedulablePO<Long> {
 
     @Id
     @GeneratedValue
@@ -39,6 +40,8 @@ public class SensorPO implements IdAndVersion {
 
     @Version
     private long version;
+
+    private boolean enabled;
 
     @Size(min = 1, max = 32)
     @NotNull
@@ -77,6 +80,15 @@ public class SensorPO implements IdAndVersion {
     @Override
     public void setVersion(long version) {
         this.version = version;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     public String getName() {

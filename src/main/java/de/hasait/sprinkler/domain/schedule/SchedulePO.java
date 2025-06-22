@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 by Sebastian Hasait (sebastian at hasait dot de)
+ * Copyright (C) 2025 by Sebastian Hasait (sebastian at hasait dot de)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,10 @@
 
 package de.hasait.sprinkler.domain.schedule;
 
+import de.hasait.common.domain.IdAndVersion;
+import de.hasait.common.domain.SchedulablePO;
 import de.hasait.sprinkler.domain.relay.RelayPO;
 import de.hasait.sprinkler.domain.sensor.SensorPO;
-import de.hasait.common.domain.IdAndVersion;
 import de.hasait.sprinkler.service.schedule.SchedulePOListener;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -45,7 +46,7 @@ import java.util.concurrent.TimeUnit;
 @Entity
 @Table(name = "SCHEDULE")
 @EntityListeners(SchedulePOListener.class)
-public class SchedulePO implements IdAndVersion {
+public class SchedulePO implements IdAndVersion, SchedulablePO<Long> {
 
     @Id
     @GeneratedValue
