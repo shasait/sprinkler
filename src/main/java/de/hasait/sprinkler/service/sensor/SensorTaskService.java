@@ -54,6 +54,10 @@ public class SensorTaskService extends AbstractTaskService<SensorPO, Long, Senso
     protected void executeTaskWithPO(SensorPO po) {
         LOG.debug("Reading sensor {}...", po.getName());
         SensorValue sensorValue = providerService.obtainValue(po.getProviderId(), po.getProviderConfig());
+        if (sensorValue == null) {
+            LOG.debug("No value obtained from {}", po.getName());
+            return;
+        }
 
         SensorValuePO sensorValuePO = new SensorValuePO();
         sensorValuePO.setSensor(po);

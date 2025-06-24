@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 by Sebastian Hasait (sebastian at hasait dot de)
+ * Copyright (C) 2025 by Sebastian Hasait (sebastian at hasait dot de)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,9 +18,9 @@ package de.hasait.sprinkler.service.sensor.provider.hww;
 
 import com.google.common.net.UrlEscapers;
 import com.google.gson.Gson;
+import de.hasait.common.util.Util;
 import de.hasait.sprinkler.service.sensor.provider.SensorProvider;
 import de.hasait.sprinkler.service.sensor.provider.SensorValue;
-import de.hasait.common.util.Util;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -192,7 +192,7 @@ public class HwwRainProvider implements SensorProvider {
             int regenhoeheAverage = regenhoehen.stream().reduce(Integer::sum).get() / regenhoehen.size();
             return createValue(maxEnde, regenhoeheAverage);
         } else {
-            return createValue(System.currentTimeMillis(), 0);
+            return null;
         }
     }
 
