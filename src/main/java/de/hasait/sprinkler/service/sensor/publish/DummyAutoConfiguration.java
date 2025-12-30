@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 by Sebastian Hasait (sebastian at hasait dot de)
+ * Copyright (C) 2025 by Sebastian Hasait (sebastian at hasait dot de)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package de.hasait.sprinkler.service.sensor.publish;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -28,7 +28,7 @@ public class DummyAutoConfiguration {
     private static final Logger LOG = LoggerFactory.getLogger(DummyAutoConfiguration.class);
 
     @Bean
-    @ConditionalOnMissingBean
+    @ConditionalOnProperty(value = "sprinkler.publisher", havingValue = "dummy")
     SensorValuePublisher sensorValuePublisher() {
         LOG.info("Using {} as {}", DummySensorValuePublisher.class, SensorValuePublisher.class);
         return new DummySensorValuePublisher();

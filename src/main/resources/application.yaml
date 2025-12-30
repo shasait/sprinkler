@@ -58,6 +58,9 @@ vaadin:
     - 'dev.hilla'
     - 'de.hasait'
 
+sprinkler:
+  publisher: 'dummy'
+
 ---
 spring:
   config:
@@ -89,6 +92,9 @@ vaadin:
   production-mode: true
   servlet:
     close-idle-sessions: true
+
+sprinkler:
+  publisher: 'dummy'
 
 ---
 spring:
@@ -122,3 +128,6 @@ vaadin:
   production-mode: true
   servlet:
     close-idle-sessions: true
+
+sprinkler:
+  publisher: 'dummy'

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 by Sebastian Hasait (sebastian at hasait dot de)
+ * Copyright (C) 2025 by Sebastian Hasait (sebastian at hasait dot de)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ public class MqttAutoConfiguration {
     private static final Logger LOG = LoggerFactory.getLogger(MqttAutoConfiguration.class);
 
     @Bean
-    @ConditionalOnProperty(value = "sprinkler.mqtt.uri")
+    @ConditionalOnProperty(value = "sprinkler.publisher", havingValue = "mqtt")
     SensorValuePublisher sensorValuePublisher(MqttConfiguration configuration) throws MqttException {
         LOG.info("Using {} as {}", MqttSensorValuePublisher.class, SensorValuePublisher.class);
         return new MqttSensorValuePublisher(configuration);
