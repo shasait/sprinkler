@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 by Sebastian Hasait (sebastian at hasait dot de)
+ * Copyright (C) 2026 by Sebastian Hasait (sebastian at hasait dot de)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 package de.hasait.common.service;
 
-import de.hasait.common.domain.IdAndVersion;
+import de.hasait.common.domain.PersistantObject;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ValidationException;
 import jakarta.validation.Validator;
@@ -31,7 +31,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-public abstract class AbstractCrudService<PO extends IdAndVersion, DTO extends IdAndVersion, RP extends JpaRepository<PO, Long>> extends AbstractListenableService {
+public abstract class AbstractCrudService<PO extends PersistantObject, DTO extends PersistantObject, RP extends JpaRepository<PO, Long>> extends AbstractListenableService {
 
     private final Validator validator;
     protected final RP repository;

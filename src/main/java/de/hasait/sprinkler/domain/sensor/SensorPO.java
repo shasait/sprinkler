@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 by Sebastian Hasait (sebastian at hasait dot de)
+ * Copyright (C) 2026 by Sebastian Hasait (sebastian at hasait dot de)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,30 +16,20 @@
 
 package de.hasait.sprinkler.domain.sensor;
 
-import de.hasait.common.domain.IdAndVersion;
+import de.hasait.common.domain.AbstractPO;
 import de.hasait.common.domain.SchedulablePO;
 import de.hasait.sprinkler.service.sensor.SensorPOListener;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.Version;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "SENSOR")
 @EntityListeners(SensorPOListener.class)
-public class SensorPO implements IdAndVersion, SchedulablePO<Long> {
-
-    @Id
-    @GeneratedValue
-    private Long id;
-
-    @Version
-    private long version;
+public class SensorPO extends AbstractPO implements SchedulablePO<Long> {
 
     private boolean enabled;
 
@@ -62,25 +52,6 @@ public class SensorPO implements IdAndVersion, SchedulablePO<Long> {
     @NotNull
     @Column(name = "CRON_EXPRESSION", nullable = false)
     private String cronExpression;
-
-    @Override
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    @Override
-    public long getVersion() {
-        return version;
-    }
-
-    @Override
-    public void setVersion(long version) {
-        this.version = version;
-    }
 
     @Override
     public boolean isEnabled() {

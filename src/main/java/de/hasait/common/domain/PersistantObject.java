@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 by Sebastian Hasait (sebastian at hasait dot de)
+ * Copyright (C) 2026 by Sebastian Hasait (sebastian at hasait dot de)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,14 @@
 
 package de.hasait.common.domain;
 
-public interface IdAndVersion {
+public interface PersistantObject {
 
     Long getId();
 
     long getVersion();
 
     void setVersion(long version);
+
+    String toFqName();
 
 }

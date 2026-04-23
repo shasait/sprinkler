@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 by Sebastian Hasait (sebastian at hasait dot de)
+ * Copyright (C) 2026 by Sebastian Hasait (sebastian at hasait dot de)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,8 +29,8 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.BinderValidationStatus;
 import com.vaadin.flow.data.binder.StatusChangeEvent;
+import de.hasait.common.domain.PersistantObject;
 import de.hasait.common.domain.SearchableRepository;
-import de.hasait.common.domain.IdAndVersion;
 import jakarta.annotation.PostConstruct;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -43,7 +43,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 /**
  *
  */
-public abstract class AbstractCrudForm<PO extends IdAndVersion, R extends SearchableRepository<PO, Long>> extends FormLayout {
+public abstract class AbstractCrudForm<PO extends PersistantObject, R extends SearchableRepository<PO, Long>> extends FormLayout {
 
     private static final Logger LOG = LoggerFactory.getLogger(AbstractCrudForm.class);
 

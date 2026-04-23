@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 by Sebastian Hasait (sebastian at hasait dot de)
+ * Copyright (C) 2026 by Sebastian Hasait (sebastian at hasait dot de)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,16 +16,13 @@
 
 package de.hasait.sprinkler.domain.schedule;
 
-import de.hasait.common.domain.IdAndVersion;
+import de.hasait.common.domain.AbstractPO;
 import de.hasait.common.util.Util;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.Version;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -37,14 +34,7 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Table(name = "SCHEDULE_LOG")
-public class ScheduleLogPO implements IdAndVersion {
-
-    @Id
-    @GeneratedValue
-    private Long id;
-
-    @Version
-    private long version;
+public class ScheduleLogPO extends AbstractPO {
 
     @ManyToOne
     @JoinColumn(name = "SCHEDULE_ID", nullable = false)
@@ -61,25 +51,6 @@ public class ScheduleLogPO implements IdAndVersion {
     @Min(0)
     @Column(name = "DURATION_MILLIS", nullable = false)
     private long durationMillis;
-
-    @Override
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    @Override
-    public long getVersion() {
-        return version;
-    }
-
-    @Override
-    public void setVersion(long version) {
-        this.version = version;
-    }
 
     public SchedulePO getSchedule() {
         return schedule;

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 by Sebastian Hasait (sebastian at hasait dot de)
+ * Copyright (C) 2026 by Sebastian Hasait (sebastian at hasait dot de)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 
 @NoRepositoryBean
-public interface SearchableRepository<PO, ID> extends JpaRepository<PO, ID> {
+public interface SearchableRepository<PO extends PersistantObject, ID> extends JpaRepository<PO, ID> {
 
     Page<PO> search(String search, Pageable pageable);
 

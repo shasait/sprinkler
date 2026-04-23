@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 by Sebastian Hasait (sebastian at hasait dot de)
+ * Copyright (C) 2026 by Sebastian Hasait (sebastian at hasait dot de)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,12 @@
 
 package de.hasait.sprinkler.domain.sensor;
 
-import de.hasait.common.domain.IdAndVersion;
+import de.hasait.common.domain.AbstractPO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.Version;
 
 import java.time.LocalDateTime;
 
@@ -33,14 +30,7 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Table(name = "SENSOR_VALUE")
-public class SensorValuePO implements IdAndVersion {
-
-    @Id
-    @GeneratedValue
-    private Long id;
-
-    @Version
-    private long version;
+public class SensorValuePO extends AbstractPO {
 
     @ManyToOne
     @JoinColumn(name = "SENSOR_ID", nullable = false)
@@ -54,25 +44,6 @@ public class SensorValuePO implements IdAndVersion {
 
     @Column(name = "INT_VALUE", nullable = false)
     private int intValue;
-
-    @Override
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    @Override
-    public long getVersion() {
-        return version;
-    }
-
-    @Override
-    public void setVersion(long version) {
-        this.version = version;
-    }
 
     public SensorPO getSensor() {
         return sensor;
