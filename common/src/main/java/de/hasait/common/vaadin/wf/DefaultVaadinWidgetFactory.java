@@ -19,6 +19,7 @@ package de.hasait.common.vaadin.wf;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEventListener;
+import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -115,15 +116,29 @@ public class DefaultVaadinWidgetFactory implements VaadinWidgetFactory {
 
 
     @Override
-    public void addSpacer(@Nonnull FormLayout formLayout) {
-        formLayout.add(new Span(""));
+    public void addSpacer(@Nonnull HasComponents layout) {
+        layout.add(new Span(""));
     }
 
     @Override
-    public void addHeader(@Nonnull FormLayout formLayout, @Nonnull String baseKey, int colspan) {
+    public void addHeader(@Nonnull HasComponents layout, @Nonnull String baseKey) {
+        addHeaderInternal(layout, baseKey, null);
+    }
+
+    @Override
+    public void addHeader(@Nonnull HasComponents layout, @Nonnull String baseKey, int colspan) {
+        addHeaderInternal(layout, baseKey, colspan);
+    }
+
+    private void addHeaderInternal(@Nonnull HasComponents layout, @Nonnull String baseKey, Integer colspan) {
         H4 heading = new H4(i18nSupport.msgkka(baseKey + ".title"));
         heading.getStyle().set("margin-top", "1em");
-        formLayout.add(heading, colspan);
+        layout.add(heading);
+        if (colspan != null) {
+            if (layout instanceof FormLayout formLayout) {
+                formLayout.setColspan(heading, colspan);
+            }
+        }
     }
 
     @Nonnull

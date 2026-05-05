@@ -19,10 +19,10 @@ package de.hasait.common.vaadin.wf;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEventListener;
+import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
-import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -67,9 +67,11 @@ public interface VaadinWidgetFactory {
 
     <B> @Nonnull Grid.Column<B> addComponentColumn(@Nonnull Grid<B> grid, @Nonnull SerializableFunction<B, ? extends Component> componentFunction, @Nonnull String key);
 
-    void addHeader(@Nonnull FormLayout formLayout, @Nonnull String key, int colspan);
+    void addHeader(@Nonnull HasComponents layout, @Nonnull String key);
 
-    void addSpacer(@Nonnull FormLayout formLayout);
+    void addHeader(@Nonnull HasComponents layout, @Nonnull String key, int colspan);
+
+    void addSpacer(@Nonnull HasComponents layout);
 
     <F> @Nonnull F initField(@Nonnull F field, @Nonnull String key);
 

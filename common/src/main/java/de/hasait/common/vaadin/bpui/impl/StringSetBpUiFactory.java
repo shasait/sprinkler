@@ -53,7 +53,7 @@ public class StringSetBpUiFactory extends AbstractBpUiFactory<Object, Set<String
     @Override
     public @Nonnull <B, P extends Set<String>> BpUiWidget<B> createWidget(@Nonnull BpUiWidgets<B> bpUiWidgets, @Nonnull BeanProperty<B, P> beanProperty) {
         return new SimpleBpUiWidget<>(bpUiWidgets, beanProperty, getI18nSupport(), labelText -> {
-            StringSetWidget field = new StringSetWidget();
+            StringSetWidget field = new StringSetWidget(getI18nSupport());
             field.setLabel(labelText);
             StringSetBpUi annotation = beanProperty.findAnnotation(StringSetBpUi.class);
             field.setHeight(annotation.height());

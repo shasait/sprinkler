@@ -21,17 +21,23 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.vaadin.flow.component.ModalityMode;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.customfield.CustomField;
 import com.vaadin.flow.component.dialog.Dialog;
-import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.listbox.ListBox;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.provider.ListDataProvider;
 
+import de.hasait.common.util.I18nSupport;
+import de.hasait.common.vaadin.wf.DefaultVaadinWidgetFactory;
+import de.hasait.common.vaadin.wf.VaadinWidgetFactory;
+
 public class StringSetWidget extends CustomField<Set<String>> {
+
+    private final VaadinWidgetFactory vaadinWidgetFactory;
 
     private final Map<String, Boolean> data;
     private final ListDataProvider<String> dataProvider;
@@ -40,8 +46,10 @@ public class StringSetWidget extends CustomField<Set<String>> {
     private final Dialog addDialog;
     private final Button deleteButton;
 
-    public StringSetWidget() {
+    public StringSetWidget(I18nSupport i18nSupport) {
         super();
+
+        vaadinWidgetFactory = new DefaultVaadinWidgetFactory(i18nSupport);
 
         data = new ConcurrentHashMap<>();
         dataProvider = new ListDataProvider<>(data.keySet());
@@ -50,22 +58,19 @@ public class StringSetWidget extends CustomField<Set<String>> {
         listBox.setSizeFull();
 
         addDialog = new Dialog();
-        addDialog.setModal(true);
+        addDialog.setModality(ModalityMode.STRICT);
         addDialog.setCloseOnOutsideClick(false);
         buildAddDialogLayout();
         add(addDialog);
 
-        Button addButton = new Button("Add...");
-        addButton.addClickListener(event -> addDialog.open());
+        Button addButton = vaadinWidgetFactory.createButton(StringSetWidget.class.getSimpleName() + ".add", event -> addDialog.open());
 
-        deleteButton = new Button("Delete");
-        deleteButton.addClickListener(event -> {
-            listBox.getOptionalValue().ifPresent(value -> {
-                data.remove(value);
-                dataProvider.refreshAll();
-                updateValue();
-            });
-        });
+        deleteButton = vaadinWidgetFactory.createButton(StringSetWidget.class.getSimpleName() + ".delete",
+                event -> listBox.getOptionalValue().ifPresent(value -> {
+                    data.remove(value);
+                    dataProvider.refreshAll();
+                    updateValue();
+                }));
 
         VerticalLayout buttonLayout = new VerticalLayout(addButton, deleteButton);
         HorizontalLayout mainLayout = new HorizontalLayout(listBox, buttonLayout);
@@ -84,22 +89,23 @@ public class StringSetWidget extends CustomField<Set<String>> {
 
     private void buildAddDialogLayout() {
         VerticalLayout mainLayout = new VerticalLayout();
-        H2 title = new H2("Add Item");
+        vaadinWidgetFactory.addHeader(mainLayout, StringSetWidget.class.getSimpleName() + ".addDialog");
+
         TextField textField = new TextField();
 
-        Button addButton = new Button("Add");
-        addButton.addClickListener(event -> {
-            data.putIfAbsent(textField.getValue(), true);
-            dataProvider.refreshAll();
-            addDialog.close();
-            updateValue();
-        });
+        Button addButton = vaadinWidgetFactory.createButton("add",
+                event -> {
+                    data.putIfAbsent(textField.getValue(), true);
+                    dataProvider.refreshAll();
+                    addDialog.close();
+                    updateValue();
+                });
 
-        Button cancelButton = new Button("Cancel");
-        cancelButton.addClickListener(event -> addDialog.close());
+        Button cancelButton = vaadinWidgetFactory.createButton("cancel",
+                event -> addDialog.close());
 
         HorizontalLayout buttonLayout = new HorizontalLayout(addButton, cancelButton);
-        mainLayout.add(title, textField, buttonLayout);
+        mainLayout.add(textField, buttonLayout);
         addDialog.add(mainLayout);
 
         addDialog.addOpenedChangeListener(event -> {
