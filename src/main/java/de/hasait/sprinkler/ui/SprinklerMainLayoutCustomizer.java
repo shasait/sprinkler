@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 by Sebastian Hasait (sebastian at hasait dot de)
+ * Copyright (C) 2026 by Sebastian Hasait (sebastian at hasait dot de)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,43 +17,39 @@
 package de.hasait.sprinkler.ui;
 
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import de.hasait.common.ui.MainLayoutCustomizer;
-import de.hasait.common.ui.VaadinUtil;
+import org.springframework.stereotype.Service;
+
+import de.hasait.common.vaadin.AbstractMainLayoutCustomizer;
 import de.hasait.sprinkler.domain.relay.RelayPO;
 import de.hasait.sprinkler.domain.schedule.ScheduleLogPO;
 import de.hasait.sprinkler.domain.schedule.SchedulePO;
 import de.hasait.sprinkler.domain.sensor.SensorPO;
 import de.hasait.sprinkler.domain.sensor.SensorValuePO;
-import de.hasait.sprinkler.service.relay.provider.RelayProvider;
-import de.hasait.sprinkler.service.sensor.provider.SensorProvider;
-import de.hasait.sprinkler.ui.relay.RelayProvidersView;
-import de.hasait.sprinkler.ui.relay.RelaysView;
+import de.hasait.sprinkler.service.relay.driver.RelayDriver;
+import de.hasait.sprinkler.service.sensor.driver.SensorDriver;
+import de.hasait.sprinkler.ui.relay.RelayDriversView;
+import de.hasait.sprinkler.ui.relay.RelayGrid;
 import de.hasait.sprinkler.ui.schedule.ScheduleLogsView;
-import de.hasait.sprinkler.ui.schedule.SchedulesView;
-import de.hasait.sprinkler.ui.sensor.SensorProvidersView;
+import de.hasait.sprinkler.ui.schedule.ScheduleGrid;
+import de.hasait.sprinkler.ui.sensor.SensorDriversView;
 import de.hasait.sprinkler.ui.sensor.SensorValuesView;
-import de.hasait.sprinkler.ui.sensor.SensorsView;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
+import de.hasait.sprinkler.ui.sensor.SensorGrid;
 
 /**
  *
  */
 @Service
-public class SprinklerMainLayoutCustomizer implements MainLayoutCustomizer {
-
-    private static final Logger LOG = LoggerFactory.getLogger(SprinklerMainLayoutCustomizer.class);
+public class SprinklerMainLayoutCustomizer extends AbstractMainLayoutCustomizer {
 
     @Override
     public void populateDrawer(VerticalLayout verticalLayout) {
-        VaadinUtil.addDataViewRouterLink(verticalLayout, SchedulePO.class, "grid", SchedulesView.class);
-        VaadinUtil.addDataViewRouterLink(verticalLayout, ScheduleLogPO.class, "grid", ScheduleLogsView.class);
-        VaadinUtil.addDataViewRouterLink(verticalLayout, RelayPO.class, "grid", RelaysView.class);
-        VaadinUtil.addDataViewRouterLink(verticalLayout, RelayProvider.class, "grid", RelayProvidersView.class);
-        VaadinUtil.addDataViewRouterLink(verticalLayout, SensorPO.class, "grid", SensorsView.class);
-        VaadinUtil.addDataViewRouterLink(verticalLayout, SensorValuePO.class, "grid", SensorValuesView.class);
-        VaadinUtil.addDataViewRouterLink(verticalLayout, SensorProvider.class, "grid", SensorProvidersView.class);
+        addDataViewRouterLink(verticalLayout, SchedulePO.class, "grid", ScheduleGrid.class);
+        addDataViewRouterLink(verticalLayout, ScheduleLogPO.class, "grid", ScheduleLogsView.class);
+        addDataViewRouterLink(verticalLayout, RelayPO.class, "grid", RelayGrid.class);
+        addDataViewRouterLink(verticalLayout, RelayDriver.class, "grid", RelayDriversView.class);
+        addDataViewRouterLink(verticalLayout, SensorPO.class, "grid", SensorGrid.class);
+        addDataViewRouterLink(verticalLayout, SensorValuePO.class, "grid", SensorValuesView.class);
+        addDataViewRouterLink(verticalLayout, SensorDriver.class, "grid", SensorDriversView.class);
     }
 
 }

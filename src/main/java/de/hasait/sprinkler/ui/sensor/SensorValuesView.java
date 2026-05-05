@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 by Sebastian Hasait (sebastian at hasait dot de)
+ * Copyright (C) 2026 by Sebastian Hasait (sebastian at hasait dot de)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,16 +17,15 @@
 package de.hasait.sprinkler.ui.sensor;
 
 
-import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
-import de.hasait.common.ui.AbstractGridView;
-import de.hasait.common.ui.JpaRepositoryDataProvider;
-import de.hasait.common.ui.MainLayout;
+import jakarta.annotation.security.PermitAll;
+
+import de.hasait.common.vaadin.MainLayout;
+import de.hasait.common.vaadin.GenericCrudGrid;
 import de.hasait.sprinkler.domain.sensor.SensorValuePO;
 import de.hasait.sprinkler.domain.sensor.SensorValueRepository;
-import jakarta.annotation.security.PermitAll;
 
 /**
  *
@@ -35,40 +34,10 @@ import jakarta.annotation.security.PermitAll;
 @Route(value = "sensorvalues", layout = MainLayout.class)
 @SpringComponent
 @UIScope
-public class SensorValuesView extends AbstractGridView<SensorValuePO> {
-
-    private final SensorValueRepository repository;
-
-    private final JpaRepositoryDataProvider<SensorValuePO, SensorValueRepository> dataProvider;
+public class SensorValuesView extends GenericCrudGrid<Long, SensorValuePO, SensorValueRepository> {
 
     public SensorValuesView(SensorValueRepository repository) {
-        super(SensorValuePO.class, 1);
-
-        this.repository = repository;
-        this.dataProvider = new JpaRepositoryDataProvider<>(repository);
-        beanGrid.setDataProvider(dataProvider);
-
-        Grid.Column<SensorValuePO> scheduleIdColumn = beanGrid.addColumn(po -> po.getSensor().getName());
-        scheduleIdColumn.setHeader("Sensor Name");
-
-        Grid.Column<SensorValuePO> insertDateTimeColumn = beanGrid.addColumn(SensorValuePO::getInsertDateTime);
-        insertDateTimeColumn.setHeader("Insert Date Time");
-        insertDateTimeColumn.setSortProperty("insertDateTime");
-
-        Grid.Column<SensorValuePO> dateTimeColumn = beanGrid.addColumn(SensorValuePO::getDateTime);
-        dateTimeColumn.setHeader("Date Time");
-        dateTimeColumn.setSortProperty("dateTime");
-
-        Grid.Column<SensorValuePO> intValueColumn = beanGrid.addColumn(SensorValuePO::getIntValue);
-        intValueColumn.setHeader("Value");
-
-    }
-
-    @Override
-    protected void updateGrid() {
-        super.updateGrid();
-
-        dataProvider.refreshAll();
+        super(SensorValuePO.class, repository, null);
     }
 
 }

@@ -16,54 +16,29 @@
 
 package de.hasait.sprinkler.domain.relay;
 
-import de.hasait.common.domain.AbstractPO;
-import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+
+import de.hasait.common.jpa.domain.AbstractNameDescPO;
+import de.hasait.common.jpa.domain.driver.DriverInstanceEO;
+import de.hasait.common.vaadin.bpui.impl.DriverInstanceBpUi;
+import de.hasait.sprinkler.service.relay.driver.RelayDriver;
 
 @Entity
 @Table(name = "RELAY")
-public class RelayPO extends AbstractPO {
+public class RelayPO extends AbstractNameDescPO {
 
-    @Size(min = 1, max = 32)
-    @NotNull
-    @Column(name = "NAME", unique = true, nullable = false)
-    private String name;
+    @Embedded
+    @DriverInstanceBpUi(driverClass = RelayDriver.class)
+    private DriverInstanceEO driverInstance = new DriverInstanceEO();
 
-    @Size(min = 1, max = 32)
-    @NotNull
-    @Column(name = "PROVIDER_ID", nullable = false)
-    private String providerId;
-
-    @Size(max = 128)
-    @NotNull
-    @Column(name = "PROVIDER_CONFIG", nullable = false)
-    private String providerConfig;
-
-    public String getName() {
-        return name;
+    public DriverInstanceEO getDriverInstance() {
+        return driverInstance;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getProviderId() {
-        return providerId;
-    }
-
-    public void setProviderId(String providerId) {
-        this.providerId = providerId;
-    }
-
-    public String getProviderConfig() {
-        return providerConfig;
-    }
-
-    public void setProviderConfig(String providerConfig) {
-        this.providerConfig = providerConfig;
+    public void setDriverInstance(DriverInstanceEO driverInstance) {
+        this.driverInstance = driverInstance;
     }
 
 }

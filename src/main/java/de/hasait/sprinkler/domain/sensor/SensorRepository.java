@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 by Sebastian Hasait (sebastian at hasait dot de)
+ * Copyright (C) 2026 by Sebastian Hasait (sebastian at hasait dot de)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,20 @@
 
 package de.hasait.sprinkler.domain.sensor;
 
-import de.hasait.common.domain.SearchableRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import de.hasait.common.jpa.domain.SearchableRepository;
+
 @Repository
-public interface SensorRepository extends SearchableRepository<SensorPO, Long> {
+public interface SensorRepository extends SearchableRepository<SensorPO> {
+
+    @Override
+    default Class<SensorPO> getBeanClass() {
+        return SensorPO.class;
+    }
 
     @Override
     @Query("SELECT s FROM SensorPO s WHERE s.name LIKE %:search%")

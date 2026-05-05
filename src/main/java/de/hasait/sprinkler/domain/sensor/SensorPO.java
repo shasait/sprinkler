@@ -16,82 +16,44 @@
 
 package de.hasait.sprinkler.domain.sensor;
 
-import de.hasait.common.domain.AbstractPO;
-import de.hasait.common.domain.SchedulablePO;
-import de.hasait.sprinkler.service.sensor.SensorPOListener;
-import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+
+import de.hasait.common.jpa.domain.AbstractNameDescPO;
+import de.hasait.common.jpa.domain.ScheduleInstanceEO;
+import de.hasait.common.jpa.domain.driver.DriverInstanceEO;
+import de.hasait.common.vaadin.bpui.impl.DriverInstanceBpUi;
+import de.hasait.sprinkler.service.sensor.SensorPOListener;
+import de.hasait.sprinkler.service.sensor.driver.SensorDriver;
 
 @Entity
 @Table(name = "SENSOR")
 @EntityListeners(SensorPOListener.class)
-public class SensorPO extends AbstractPO implements SchedulablePO<Long> {
+public class SensorPO extends AbstractNameDescPO {
 
-    private boolean enabled;
+    @Embedded
+    @DriverInstanceBpUi(driverClass = SensorDriver.class)
+    private DriverInstanceEO driverInstance = new DriverInstanceEO();
 
-    @Size(min = 1, max = 32)
-    @NotNull
-    @Column(name = "NAME", unique = true, nullable = false)
-    private String name;
+    @Embedded
+    private ScheduleInstanceEO scheduleInstance = new ScheduleInstanceEO();
 
-    @Size(min = 1, max = 32)
-    @NotNull
-    @Column(name = "PROVIDER_ID", nullable = false)
-    private String providerId;
-
-    @Size(max = 128)
-    @NotNull
-    @Column(name = "PROVIDER_CONFIG", nullable = false)
-    private String providerConfig;
-
-    @Size(min = 1, max = 64)
-    @NotNull
-    @Column(name = "CRON_EXPRESSION", nullable = false)
-    private String cronExpression;
-
-    @Override
-    public boolean isEnabled() {
-        return enabled;
+    public DriverInstanceEO getDriverInstance() {
+        return driverInstance;
     }
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+    public void setDriverInstance(DriverInstanceEO driverInstance) {
+        this.driverInstance = driverInstance;
     }
 
-    public String getName() {
-        return name;
+    public ScheduleInstanceEO getScheduleInstance() {
+        return scheduleInstance;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getProviderId() {
-        return providerId;
-    }
-
-    public void setProviderId(String providerId) {
-        this.providerId = providerId;
-    }
-
-    public String getProviderConfig() {
-        return providerConfig;
-    }
-
-    public void setProviderConfig(String providerConfig) {
-        this.providerConfig = providerConfig;
-    }
-
-    public String getCronExpression() {
-        return cronExpression;
-    }
-
-    public void setCronExpression(String cronExpression) {
-        this.cronExpression = cronExpression;
+    public void setScheduleInstance(ScheduleInstanceEO scheduleInstance) {
+        this.scheduleInstance = scheduleInstance;
     }
 
 }

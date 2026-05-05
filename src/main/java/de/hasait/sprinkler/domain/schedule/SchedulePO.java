@@ -16,13 +16,12 @@
 
 package de.hasait.sprinkler.domain.schedule;
 
-import de.hasait.common.domain.AbstractPO;
-import de.hasait.common.domain.SchedulablePO;
-import de.hasait.sprinkler.domain.relay.RelayPO;
-import de.hasait.sprinkler.domain.sensor.SensorPO;
-import de.hasait.sprinkler.service.schedule.SchedulePOListener;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.JoinColumn;
@@ -30,12 +29,16 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 
-import java.util.List;
-import java.util.concurrent.TimeUnit;
+import de.hasait.common.jpa.domain.AbstractPO;
+import de.hasait.common.jpa.domain.ScheduleInstanceEO;
+import de.hasait.common.util.Unit;
+import de.hasait.common.vaadin.bpui.impl.NumberWithUnitBpUi;
+import de.hasait.sprinkler.domain.relay.RelayPO;
+import de.hasait.sprinkler.domain.sensor.SensorPO;
+import de.hasait.sprinkler.service.schedule.SchedulePOListener;
 
 /**
  *
@@ -43,16 +46,19 @@ import java.util.concurrent.TimeUnit;
 @Entity
 @Table(name = "SCHEDULE")
 @EntityListeners(SchedulePOListener.class)
-public class SchedulePO extends AbstractPO implements SchedulablePO<Long> {
+public class SchedulePO extends AbstractPO {
 
-    private boolean enabled;
+    @Embedded
+    private ScheduleInstanceEO scheduleInstance = new ScheduleInstanceEO();
 
     @ManyToOne
     @JoinColumn(name = "RELAY_ID", nullable = false)
     private RelayPO relay;
 
     @Min(1)
+    @Max(10 * 60 * 60) // 10 hours
     @Column(name = "DURATION_S")
+    @NumberWithUnitBpUi(unit = Unit.S)
     private int durationSeconds;
 
     @ManyToOne
@@ -67,21 +73,16 @@ public class SchedulePO extends AbstractPO implements SchedulablePO<Long> {
     @Column(name = "SENSOR_CHANGE_LIMIT")
     private int sensorChangeLimit;
 
-    @Size(min = 1, max = 64)
-    @NotNull
-    @Column(name = "CRON_EXPRESSION", nullable = false)
-    private String cronExpression;
-
     @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL)
     @OrderBy("start DESC")
     private List<ScheduleLogPO> log;
 
-    public boolean isEnabled() {
-        return enabled;
+    public ScheduleInstanceEO getScheduleInstance() {
+        return scheduleInstance;
     }
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+    public void setScheduleInstance(ScheduleInstanceEO scheduleInstance) {
+        this.scheduleInstance = scheduleInstance;
     }
 
     public RelayPO getRelay() {
@@ -122,14 +123,6 @@ public class SchedulePO extends AbstractPO implements SchedulablePO<Long> {
 
     public void setSensorChangeLimit(int sensorChangeLimit) {
         this.sensorChangeLimit = sensorChangeLimit;
-    }
-
-    public String getCronExpression() {
-        return cronExpression;
-    }
-
-    public void setCronExpression(String cronExpression) {
-        this.cronExpression = cronExpression;
     }
 
     public long determineDurationMillis() {

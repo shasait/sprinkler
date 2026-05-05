@@ -16,8 +16,8 @@
 
 package de.hasait.sprinkler.domain.schedule;
 
-import de.hasait.common.domain.AbstractPO;
-import de.hasait.common.util.Util;
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -27,7 +27,10 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-import java.time.LocalDateTime;
+import de.hasait.common.jpa.domain.AbstractPO;
+import de.hasait.common.util.Unit;
+import de.hasait.common.util.Util;
+import de.hasait.common.vaadin.bpui.impl.NumberWithUnitBpUi;
 
 /**
  *
@@ -50,6 +53,7 @@ public class ScheduleLogPO extends AbstractPO {
 
     @Min(0)
     @Column(name = "DURATION_MILLIS", nullable = false)
+    @NumberWithUnitBpUi(unit = Unit.MS)
     private long durationMillis;
 
     public SchedulePO getSchedule() {

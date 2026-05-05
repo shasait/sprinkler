@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 by Sebastian Hasait (sebastian at hasait dot de)
+ * Copyright (C) 2026 by Sebastian Hasait (sebastian at hasait dot de)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,17 +17,15 @@
 package de.hasait.sprinkler.ui.schedule;
 
 
-import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
-import de.hasait.common.ui.AbstractGridView;
-import de.hasait.common.ui.JpaRepositoryDataProvider;
-import de.hasait.common.ui.MainLayout;
+import jakarta.annotation.security.PermitAll;
+
+import de.hasait.common.vaadin.MainLayout;
+import de.hasait.common.vaadin.GenericCrudGrid;
 import de.hasait.sprinkler.domain.schedule.ScheduleLogPO;
 import de.hasait.sprinkler.domain.schedule.ScheduleLogRepository;
-import de.hasait.sprinkler.ui.UiConstants;
-import jakarta.annotation.security.PermitAll;
 
 /**
  *
@@ -36,37 +34,10 @@ import jakarta.annotation.security.PermitAll;
 @Route(value = "schedulelogs", layout = MainLayout.class)
 @SpringComponent
 @UIScope
-public class ScheduleLogsView extends AbstractGridView<ScheduleLogPO> {
-
-    private final ScheduleLogRepository repository;
-
-    private final JpaRepositoryDataProvider<ScheduleLogPO, ScheduleLogRepository> dataProvider;
+public class ScheduleLogsView extends GenericCrudGrid<Long, ScheduleLogPO, ScheduleLogRepository> {
 
     public ScheduleLogsView(ScheduleLogRepository repository) {
-        super(ScheduleLogPO.class, 1);
-
-        this.repository = repository;
-        this.dataProvider = new JpaRepositoryDataProvider<>(repository);
-        beanGrid.setDataProvider(dataProvider);
-
-        Grid.Column<ScheduleLogPO> startColumn = beanGrid.addColumn(ScheduleLogPO::getStart);
-        startColumn.setHeader("Start");
-
-        Grid.Column<ScheduleLogPO> scheduleIdColumn = beanGrid.addColumn(po -> po.getSchedule().getId());
-        scheduleIdColumn.setHeader("Schedule Id");
-
-        Grid.Column<ScheduleLogPO> relayNameColumn = beanGrid.addColumn(ScheduleLogPO::getRelayName);
-        relayNameColumn.setHeader("Relay Name");
-
-        Grid.Column<ScheduleLogPO> durationMillisColumn = beanGrid.addColumn(ScheduleLogPO::determineDurationHuman);
-        durationMillisColumn.setHeader(UiConstants.CAPTION_DURATION_HUMAN);
-    }
-
-    @Override
-    protected void updateGrid() {
-        super.updateGrid();
-
-        dataProvider.refreshAll();
+        super(ScheduleLogPO.class, repository, null);
     }
 
 }

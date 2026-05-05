@@ -16,7 +16,6 @@
 
 package de.hasait.sprinkler.service.schedule;
 
-import de.hasait.sprinkler.domain.schedule.SchedulePO;
 import jakarta.persistence.PostPersist;
 import jakarta.persistence.PostUpdate;
 import jakarta.persistence.PreRemove;
@@ -24,12 +23,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import de.hasait.sprinkler.domain.schedule.SchedulePO;
+
 @Service
 public class SchedulePOListener {
 
     private static final Logger LOG = LoggerFactory.getLogger(SchedulePOListener.class);
 
-    static ScheduleTaskService scheduleTaskService;
+    static ScheduleService scheduleTaskService;
 
     @PostPersist
     public void postPersistSchedulePO(SchedulePO po) {
@@ -42,14 +43,14 @@ public class SchedulePOListener {
     public void postUpdateSchedulePO(SchedulePO po) {
         LOG.debug("postUpdateSchedulePO: {}", po);
 
-        scheduleTaskService.postUpdatePO(po);
+        scheduleTaskService.postUpdate(po);
     }
 
     @PreRemove
     public void preRemoveSchedulePO(SchedulePO po) {
         LOG.debug("preRemoveSchedulePO: {}", po);
 
-        scheduleTaskService.preRemovePO(po);
+        scheduleTaskService.preRemove(po);
     }
 
 }

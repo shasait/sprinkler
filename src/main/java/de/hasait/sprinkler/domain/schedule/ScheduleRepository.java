@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 by Sebastian Hasait (sebastian at hasait dot de)
+ * Copyright (C) 2026 by Sebastian Hasait (sebastian at hasait dot de)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,21 +16,27 @@
 
 package de.hasait.sprinkler.domain.schedule;
 
-import de.hasait.common.domain.SearchableRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import de.hasait.common.jpa.domain.SearchableRepository;
+
 @Repository
-public interface ScheduleRepository extends SearchableRepository<SchedulePO, Long> {
+public interface ScheduleRepository extends SearchableRepository<SchedulePO> {
 
     @Override
-    @Query("SELECT s FROM SchedulePO s WHERE s.cronExpression LIKE %:search%")
+    default Class<SchedulePO> getBeanClass() {
+        return SchedulePO.class;
+    }
+
+    @Override
+    @Query("SELECT s FROM SchedulePO s WHERE s.scheduleInstance.scheduleCron LIKE %:search%")
     Page<SchedulePO> search(String search, Pageable pageable);
 
     @Override
-    @Query("SELECT COUNT(s) FROM SchedulePO s WHERE s.cronExpression LIKE %:search%")
+    @Query("SELECT COUNT(s) FROM SchedulePO s WHERE s.scheduleInstance.scheduleCron LIKE %:search%")
     long searchCount(String search);
 
 }

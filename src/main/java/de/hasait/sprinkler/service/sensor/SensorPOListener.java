@@ -16,7 +16,6 @@
 
 package de.hasait.sprinkler.service.sensor;
 
-import de.hasait.sprinkler.domain.sensor.SensorPO;
 import jakarta.persistence.PostPersist;
 import jakarta.persistence.PostUpdate;
 import jakarta.persistence.PreRemove;
@@ -24,12 +23,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import de.hasait.sprinkler.domain.sensor.SensorPO;
+
 @Service
 public class SensorPOListener {
 
     private static final Logger LOG = LoggerFactory.getLogger(SensorPOListener.class);
 
-    static SensorTaskService sensorTaskService;
+    static SensorScheduleService sensorTaskService;
 
     @PostPersist
     public void postPersistSchedulePO(SensorPO po) {
@@ -42,14 +43,14 @@ public class SensorPOListener {
     public void postUpdateSchedulePO(SensorPO po) {
         LOG.debug("postUpdateSchedulePO: {}", po);
 
-        sensorTaskService.postUpdatePO(po);
+        sensorTaskService.postUpdate(po);
     }
 
     @PreRemove
     public void preRemoveSchedulePO(SensorPO po) {
         LOG.debug("preRemoveSchedulePO: {}", po);
 
-        sensorTaskService.preRemovePO(po);
+        sensorTaskService.preRemove(po);
     }
 
 }

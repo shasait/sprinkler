@@ -16,24 +16,40 @@
 
 package de.hasait.sprinkler.service.sensor;
 
-import de.hasait.sprinkler.domain.sensor.SensorPO;
-import de.hasait.sprinkler.domain.sensor.SensorValuePO;
-import de.hasait.sprinkler.domain.sensor.SensorValueRepository;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import de.hasait.common.service.driver.AbstractDriverService;
+import de.hasait.common.service.driver.DriverInstance;
+import de.hasait.sprinkler.domain.sensor.SensorPO;
+import de.hasait.sprinkler.domain.sensor.SensorValuePO;
+import de.hasait.sprinkler.domain.sensor.SensorValueRepository;
+import de.hasait.sprinkler.service.sensor.driver.SensorDriver;
+import de.hasait.sprinkler.service.sensor.driver.SensorValue;
 
 @Service
-public class SensorService {
+public class SensorService extends AbstractDriverService<SensorDriver<?>, SensorPO, DriverInstance> {
 
     private static final Logger LOG = LoggerFactory.getLogger(SensorService.class);
 
     private final SensorValueRepository valueRepository;
 
-    public SensorService(SensorValueRepository valueRepository) {
+    public SensorService(SensorDriver<?>[] drivers, SensorValueRepository valueRepository) {
+        super(drivers, SensorPO.class, SensorPO::getDriverInstance);
+
         this.valueRepository = valueRepository;
+    }
+
+    public SensorValue obtainValue(SensorPO sensorPO) {
+        return driverFunction(sensorPO, (ignored, driver, di) -> obtainValueInternal(driver, di.getDriverConfig()));
+    }
+
+    private <C> SensorValue obtainValueInternal(SensorDriver<C> driver, String driverConfigText) {
+        C config = driver.parseDriverConfigText(driverConfigText);
+        return driver.obtainValue(config);
     }
 
     public int determineChange(SensorPO sensorPO) {
