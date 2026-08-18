@@ -16,18 +16,10 @@
 
 package de.hasait.common.vaadin;
 
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.html.H4;
-import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import jakarta.annotation.Nonnull;
 import jakarta.annotation.PostConstruct;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import de.hasait.common.util.I18nSupport;
@@ -36,14 +28,10 @@ import de.hasait.common.vaadin.wf.VaadinWidgetFactory;
 
 public abstract class AbstractForm extends FormLayout {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AbstractForm.class);
-
-    private final HorizontalLayout buttonBar = new HorizontalLayout();
-
-    private final List<Runnable> changeListeners = new CopyOnWriteArrayList<>();
-
     protected I18nSupport i18nSupport;
     protected VaadinWidgetFactory vaadinWidgetFactory;
+
+    private HorizontalLayout buttonBar;
 
     public AbstractForm() {
         super();
@@ -62,10 +50,10 @@ public abstract class AbstractForm extends FormLayout {
     @PostConstruct
     public final void init() {
         populateLayoutBeforeButtonBar();
-
-        add(buttonBar);
+        addButtonBar();
 
         populateLayoutAfterButtonBar();
+        addButtonBar();
 
         initAfterLayout();
     }
@@ -79,26 +67,18 @@ public abstract class AbstractForm extends FormLayout {
     protected void initAfterLayout() {
     }
 
-    protected final void addToButtonBar(Component component) {
-        buttonBar.add(component);
-    }
-
-    public final void addListener(@Nonnull Runnable listener) {
-        changeListeners.add(listener);
-    }
-
-    public final void removeListener(Runnable listener) {
-        changeListeners.remove(listener);
-    }
-
-    protected final void notifyListeners() {
-        for (Runnable listener : changeListeners) {
-            try {
-                listener.run();
-            } catch (RuntimeException e) {
-                LOG.warn("ignored listener failure", e);
-            }
+    protected final void addButtonBar() {
+        if (buttonBar != null) {
+            add(buttonBar);
+            buttonBar = null;
         }
+    }
+
+    protected final void addToButtonBar(Component... components) {
+        if (buttonBar == null) {
+            buttonBar = new HorizontalLayout();
+        }
+        buttonBar.add(components);
     }
 
 }

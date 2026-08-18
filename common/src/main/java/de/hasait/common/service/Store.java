@@ -19,6 +19,8 @@ package de.hasait.common.service;
 import java.util.List;
 import java.util.Optional;
 
+import jakarta.annotation.Nonnull;
+
 public interface Store<B extends HasId<ID>, ID> {
 
     default Class<B> getBeanClass() {
@@ -29,9 +31,10 @@ public interface Store<B extends HasId<ID>, ID> {
 
     long countAllBeans();
 
-    Optional<B> findBeanById(ID id);
+    Optional<B> findBeanById(@Nonnull ID id);
 
-    <EB extends B> EB addOrUpdateBean(EB bean);
+    @Nonnull
+    <EB extends B> EB addOrUpdateBean(@Nonnull EB bean);
 
     void deleteBean(B bean);
 

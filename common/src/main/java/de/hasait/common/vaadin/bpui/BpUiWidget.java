@@ -30,6 +30,8 @@ public interface BpUiWidget<B> {
 
     int getLayoutPriority();
 
+    // TODO LayoutGroups: add String getLayoutGroup();
+
     void populateForm(@Nonnull FormLayout layout);
 
     void populateBinder(@Nonnull Binder<B> binder);

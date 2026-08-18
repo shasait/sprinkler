@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.hasait.sprinkler.ui.sensor;
+package de.hasait.sprinkler.ui.relay;
 
 
 import com.vaadin.flow.router.Route;
@@ -22,22 +22,22 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import jakarta.annotation.security.PermitAll;
 
-import de.hasait.common.vaadin.AbstractDriversView;
+import de.hasait.common.vaadin.AbstractDriverGridView;
 import de.hasait.common.vaadin.MainLayout;
-import de.hasait.sprinkler.service.sensor.SensorService;
-import de.hasait.sprinkler.service.sensor.driver.SensorDriver;
+import de.hasait.sprinkler.service.relay.RelayService;
+import de.hasait.sprinkler.service.relay.driver.RelayDriver;
 
 /**
  *
  */
 @PermitAll
-@Route(value = "sensordrivers", layout = MainLayout.class)
+@Route(value = "relaydrivers", layout = MainLayout.class)
 @SpringComponent
 @UIScope
-public class SensorDriversView extends AbstractDriversView<SensorDriver<?>, SensorService> {
+public class RelayDriverGridView extends AbstractDriverGridView<RelayDriver<?>, RelayService> {
 
-    public SensorDriversView(SensorService sensorService) {
-        super(sensorService);
+    public RelayDriverGridView(RelayService relayService) {
+        super(relayService);
     }
 
 }

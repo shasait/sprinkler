@@ -24,12 +24,16 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.BinderValidationStatus;
 import com.vaadin.flow.data.binder.StatusChangeEvent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import jakarta.annotation.Nonnull;
 
-public abstract class AbstractBeanForm<B> extends AbstractForm {
+import de.hasait.common.util.listener.ChangeListener;
+import de.hasait.common.util.listener.ChangeListenerSupport;
+import de.hasait.common.util.listener.ChangeListenerSupportDelegate;
+import de.hasait.common.util.listener.ValueChange;
 
-    private static final Logger LOG = LoggerFactory.getLogger(AbstractBeanForm.class);
+public abstract class AbstractBeanForm<B> extends AbstractForm implements ChangeListenerSupport<AbstractBeanForm<B>, ValueChange<B>> {
+
+    private final ChangeListenerSupportDelegate<AbstractBeanForm<B>, ValueChange<B>> listenerSupportDelegate = new ChangeListenerSupportDelegate<>();
 
     private final Button addOrSaveButton = new Button();
     private final Button deleteButton = new Button();
@@ -48,6 +52,20 @@ public abstract class AbstractBeanForm<B> extends AbstractForm {
 
         this.beanClass = beanClass;
         this.binder = new Binder<>(beanClass);
+    }
+
+    @Override
+    public final void addChangeListener(@Nonnull ChangeListener<? super AbstractBeanForm<B>, ? super ValueChange<B>> listener) {
+        listenerSupportDelegate.addChangeListener(listener);
+    }
+
+    @Override
+    public final void removeChangeListener(@Nonnull ChangeListener<? super AbstractBeanForm<B>, ? super ValueChange<B>> listener) {
+        listenerSupportDelegate.removeChangeListener(listener);
+    }
+
+    protected final void notifyListeners(B oldBean, B newBean) {
+        listenerSupportDelegate.fireChanged(this, new ValueChange<>(oldBean, newBean));
     }
 
     protected void populateLayoutBeforeButtonBar() {
@@ -93,6 +111,10 @@ public abstract class AbstractBeanForm<B> extends AbstractForm {
         afterBeanSet();
     }
 
+    public final B getBean() {
+        return binder.getBean();
+    }
+
     protected abstract boolean isNewBean(B bean);
 
     protected void afterBeanSet() {
@@ -117,18 +139,18 @@ public abstract class AbstractBeanForm<B> extends AbstractForm {
 
         B bean = binder.getBean();
         if (bean != null) {
-            saveAndFlushBean(bean);
-            notifyListeners();
+            B savedBean = saveAndFlushBean(bean);
+            notifyListeners(null, savedBean);
         }
     }
 
-    protected abstract void saveAndFlushBean(B bean);
+    protected abstract B saveAndFlushBean(B bean);
 
     private void onDeleteButtonClicked(ClickEvent<?> clickEvent) {
         B bean = binder.getBean();
         if (bean != null) {
             deleteBean(bean);
-            notifyListeners();
+            notifyListeners(bean, null);
         }
     }
 

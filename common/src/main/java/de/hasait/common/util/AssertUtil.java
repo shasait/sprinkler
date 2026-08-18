@@ -36,7 +36,7 @@ public final class AssertUtil {
         super();
     }
 
-    public static AssertionException createFail(final String pattern, final Object... args) {
+    public static AssertionException createFail(String pattern, Object... args) {
         return new AssertionException(MessageFormatUtil.format(pattern, args));
     }
 
@@ -44,270 +44,290 @@ public final class AssertUtil {
         return createNotReachable("not reachable"); //$NON-NLS-1$
     }
 
-    public static AssertionException createNotReachable(final String pattern, final Object... args) {
+    public static AssertionException createNotReachable(String pattern, Object... args) {
         return createFail(pattern, args);
     }
 
-    public static <T> void equals(final T object1, final T object2) {
-        equals(object1, object2, "{0} not equals to {1}", object1, object2); //$NON-NLS-1$
-    }
-
-    public static <T> void equals(final T object1, final T object2, final String pattern, final Object... args) {
-        if (!Objects.equals(object1, object2)) {
-            fail(pattern, args);
-        }
-    }
-
-    public static AssertionException fail(final String pattern, final Object... args) {
+    public static AssertionException fail(String pattern, Object... args) {
         throw createFail(pattern, args);
     }
 
-    public static void greater(final int lowerBoundExclusive, final int value) {
-        greater(lowerBoundExclusive, value, "{0} is not greater than {1}", value, lowerBoundExclusive);
+    public static void isFalse(boolean condition) {
+        isFalse(condition, "value has to be false");
     }
 
-    public static void greater(final int lowerBoundExclusive, final int value, final String pattern, final Object... args) {
-        isTrue(value > lowerBoundExclusive, pattern, args);
-    }
-
-    public static void greater(final long lowerBoundExclusive, final long value) {
-        greater(lowerBoundExclusive, value, "{0} is not greater than {1}", value, lowerBoundExclusive);
-    }
-
-    public static void greater(final long lowerBoundExclusive, final long value, final String pattern, final Object... args) {
-        isTrue(value > lowerBoundExclusive, pattern, args);
-    }
-
-    public static void greater(final byte lowerBoundExclusive, final byte value) {
-        greater(lowerBoundExclusive, value, "{0} is not greater than {1}", value, lowerBoundExclusive);
-    }
-
-    public static void greater(final byte lowerBoundExclusive, final byte value, final String pattern, final Object... args) {
-        isTrue(value > lowerBoundExclusive, pattern, args);
-    }
-
-    public static void greater(final short lowerBoundExclusive, final short value) {
-        greater(lowerBoundExclusive, value, "{0} is not greater than {1}", value, lowerBoundExclusive);
-    }
-
-    public static void greater(final short lowerBoundExclusive, final short value, final String pattern, final Object... args) {
-        isTrue(value > lowerBoundExclusive, pattern, args);
-    }
-
-    public static void greaterOrEqual(final int lowerBound, final int value) {
-        greaterOrEqual(lowerBound, value, "{0} is less than {1}", value, lowerBound);
-    }
-
-    public static void greaterOrEqual(final int lowerBound, final int value, final String pattern, final Object... args) {
-        isTrue(value >= lowerBound, pattern, args);
-    }
-
-    public static void greaterOrEqual(final long lowerBound, final long value) {
-        greaterOrEqual(lowerBound, value, "{0} is less than {1}", value, lowerBound);
-    }
-
-    public static void greaterOrEqual(final long lowerBound, final long value, final String pattern, final Object... args) {
-        isTrue(value >= lowerBound, pattern, args);
-    }
-
-    public static void greaterOrEqual(final byte lowerBound, final byte value) {
-        greaterOrEqual(lowerBound, value, "{0} is less than {1}", value, lowerBound);
-    }
-
-    public static void greaterOrEqual(final byte lowerBound, final byte value, final String pattern, final Object... args) {
-        isTrue(value >= lowerBound, pattern, args);
-    }
-
-    public static void greaterOrEqual(final short lowerBound, final short value) {
-        greaterOrEqual(lowerBound, value, "{0} is less than {1}", value, lowerBound);
-    }
-
-    public static void greaterOrEqual(final short lowerBound, final short value, final String pattern, final Object... args) {
-        isTrue(value >= lowerBound, pattern, args);
-    }
-
-    public static void isFalse(final boolean condition) {
-        isFalse(condition, "value is true");
-    }
-
-    public static void isFalse(final boolean condition, final String pattern, final Object... args) {
+    public static void isFalse(boolean condition, String pattern, Object... args) {
         if (condition) {
             fail(pattern, args);
         }
     }
 
-    public static void isNull(final Object value) {
-        isNull(value, "value is not null");
+    public static void isTrue(boolean condition) {
+        isTrue(condition, "value has to be true");
     }
 
-    public static void isNull(final Object value, final String pattern, final Object... args) {
-        isTrue(value == null, pattern, args);
-    }
-
-    public static void isTrue(final boolean condition) {
-        isTrue(condition, "value is false");
-    }
-
-    public static void isTrue(final boolean condition, final String pattern, final Object... args) {
+    public static void isTrue(boolean condition, String pattern, Object... args) {
         if (!condition) {
             fail(pattern, args);
         }
     }
 
-    public static void less(final int upperBoundExclusive, final int value) {
-        less(upperBoundExclusive, value, "{0} is not less than {1}", value, upperBoundExclusive);
+    public static void isNull(Object value) {
+        isNull(value, "value");
     }
 
-    public static void less(final int upperBoundExclusive, final int value, final String pattern, final Object... args) {
-        isTrue(value < upperBoundExclusive, pattern, args);
+    public static void isNull(Object value, String valueDescription) {
+        isNullWithPattern(value, "{0} has to be null", valueDescription);
     }
 
-    public static void less(final long upperBoundExclusive, final long value) {
-        less(upperBoundExclusive, value, "{0} is not less than {1}", value, upperBoundExclusive);
+    public static void isNullWithPattern(Object value, String pattern, Object... args) {
+        isTrue(value == null, pattern, args);
     }
 
-    public static void less(final long upperBoundExclusive, final long value, final String pattern, final Object... args) {
-        isTrue(value < upperBoundExclusive, pattern, args);
+    public static <T> T notNull(T value) {
+        return notNull(value, "value");
     }
 
-    public static void less(final byte upperBoundExclusive, final byte value) {
-        less(upperBoundExclusive, value, "{0} is not less than {1}", value, upperBoundExclusive);
+    public static <T> T notNull(T value, String valueDescription) {
+        notNullWithPattern(value, "{0} cannot be null", valueDescription);
+        return value;
     }
 
-    public static void less(final byte upperBoundExclusive, final byte value, final String pattern, final Object... args) {
-        isTrue(value < upperBoundExclusive, pattern, args);
-    }
-
-    public static void less(final short upperBoundExclusive, final short value) {
-        less(upperBoundExclusive, value, "{0} is not less than {1}", value, upperBoundExclusive);
-    }
-
-    public static void less(final short upperBoundExclusive, final short value, final String pattern, final Object... args) {
-        isTrue(value < upperBoundExclusive, pattern, args);
-    }
-
-    public static void lessOrEqual(final int upperBound, final int value) {
-        lessOrEqual(upperBound, value, "{0} is greater than {1}", value, upperBound);
-    }
-
-    public static void lessOrEqual(final int upperBound, final int value, final String pattern, final Object... args) {
-        isTrue(value <= upperBound, pattern, args);
-    }
-
-    public static void lessOrEqual(final long upperBound, final long value) {
-        lessOrEqual(upperBound, value, "{0} is greater than {1}", value, upperBound);
-    }
-
-    public static void lessOrEqual(final long upperBound, final long value, final String pattern, final Object... args) {
-        isTrue(value <= upperBound, pattern, args);
-    }
-
-    public static void lessOrEqual(final byte upperBound, final byte value) {
-        lessOrEqual(upperBound, value, "{0} is greater than {1}", value, upperBound);
-    }
-
-    public static void lessOrEqual(final byte upperBound, final byte value, final String pattern, final Object... args) {
-        isTrue(value <= upperBound, pattern, args);
-    }
-
-    public static void lessOrEqual(final short upperBound, final short value) {
-        lessOrEqual(upperBound, value, "{0} is greater than {1}", value, upperBound);
-    }
-
-    public static void lessOrEqual(final short upperBound, final short value, final String pattern, final Object... args) {
-        isTrue(value <= upperBound, pattern, args);
-    }
-
-    public static @Nonnull String notBlank(final String string) {
-        return notBlank(string, "blank");
-    }
-
-    public static @Nonnull String notBlank(final String string, final String pattern, final Object... args) {
-        isFalse(StringUtils.isBlank(string), pattern, args);
-        return string;
-    }
-
-    public static @Nonnull String notEmpty(final String string) {
-        return notEmpty(string, "empty");
-    }
-
-    public static @Nonnull String notEmpty(final String string, final String pattern, final Object... args) {
-        isFalse(StringUtils.isEmpty(string), pattern, args);
-        return string;
-    }
-
-    public static @Nonnull <C extends Collection<?>> C notEmpty(final C collection) {
-        return notEmpty(collection, "empty");
-    }
-
-    public static <C extends Collection<?>> C notEmpty(final C collection, final String pattern, final Object... args) {
-        isFalse(collection.isEmpty(), pattern, args);
-        return collection;
-    }
-
-    public static <T> void notEquals(final T object1, final T object2) {
-        notEquals(object1, object2, "{0} equals to {1}", object1, object2); //$NON-NLS-1$
-    }
-
-    public static <T> void notEquals(final T object1, final T object2, final String pattern, final Object... args) {
-        isFalse(Objects.equals(object1, object2), pattern, args);
-    }
-
-    public static <T> T notNull(final T value) {
-        return notNull(value, "value is null");
-    }
-
-    public static <T> T notNull(final T value, final String pattern, final Object... args) {
+    public static <T> T notNullWithPattern(T value, String pattern, Object... args) {
         isTrue(value != null, pattern, args);
         return value;
     }
 
-    public static <T> T same(final T object1, final T object2) {
-        return same(object1, object2, "{0} not same to {1}", object1, object2);
+    public static <T> void equals(T object1, T object2) {
+        equals(object1, "object1", object2, "object2");
     }
 
-    public static <T> T same(final T object1, final T object2, final String pattern, final Object... args) {
-        isTrue(object1 == object2, pattern, args);
+    public static <T> void equals(T object1, String object1Description, T object2, String object2Description) {
+        isTrue(Objects.equals(object1, object2), "{0} ({1}) has to be equal to {1} ({2})", object1, object1Description, object2, object2Description);
+    }
+
+    public static <T> void notEquals(T object1, T object2) {
+        notEquals(object1, "object1", object2, "object2");
+    }
+
+    public static <T> void notEquals(T object1, String object1Description, T object2, String object2Description) {
+        isFalse(Objects.equals(object1, object2), "{0} ({1}) cannot be equal to {1} ({2})", object1, object1Description, object2, object2Description);
+    }
+
+    public static <T> T same(T object1, T object2) {
+        return same(object1, "object1", object2, "object2");
+    }
+
+    public static <T> T same(T object1, String object1Description, T object2, String object2Description) {
+        isTrue(object1 == object2, "{0} ({1}) has to be the same as {1} ({2})", object1, object1Description, object2, object2Description);
         return object1;
     }
 
-    public static String[] splittable(final String string, final char splitChar, final int expectedPartCount) {
-        notNull(string);
+    public static @Nonnull String notBlank(String string) {
+        return notBlank(string, "string");
+    }
+
+    public static @Nonnull String notBlank(String string, String stringDescription) {
+        isTrue(StringUtils.isNotBlank(string), "{0} cannot be blank", stringDescription);
+        return string;
+    }
+
+    public static @Nonnull String notEmpty(String string) {
+        return notEmpty(string, "string");
+    }
+
+    public static @Nonnull String notEmpty(String string, String stringDescription) {
+        isTrue(StringUtils.isNotEmpty(string), "{0} cannot be empty", stringDescription);
+        return string;
+    }
+
+    public static @Nonnull <C extends Collection<?>> C notEmpty(C collection) {
+        return notEmpty(collection, "collection");
+    }
+
+    public static <C extends Collection<?>> C notEmpty(C collection, String collectionDescription) {
+        notNull(collection, collectionDescription);
+        isFalse(collection.isEmpty(), "{0} cannot be empty", collectionDescription);
+        return collection;
+    }
+
+    public static Matcher matches(String pattern, String string, String stringDescription) {
+        return matches(Pattern.compile(pattern), string, stringDescription);
+    }
+
+    public static Matcher matches(Pattern pattern, String string, String stringDescription) {
+        notNull(string, stringDescription);
+        Matcher matcher = pattern.matcher(string);
+        isTrue(matcher.matches(), "{0} ({1}) has to match pattern {2}", string, stringDescription, pattern);
+        return matcher;
+    }
+
+    /**
+     * In range excluding both ends - named "Open interval" in math.
+     */
+    public static int inRangeEE(int value, int gt, int lt, String valueDescription) {
+        isTrue(gt < value && value < lt, "{0} ({1}) has to be in interval ({2}:{3})", value, valueDescription, gt, lt);
+        return value;
+    }
+
+    /**
+     * In range including both ends - named "Closed interval" in math.
+     */
+    public static int inRangeII(int value, int gte, int lte, String valueDescription) {
+        isTrue(gte <= value && value <= lte, "{0} ({1}) has to be in interval [{2}:{3}]", value, valueDescription, gte, lte);
+        return value;
+    }
+
+    public static String[] splittable(String string, char splitChar, int expectedPartCount, String stringDescription) {
+        notNull(string, stringDescription);
         final List<String> strings = Splitter.on(splitChar).splitToList(string);
-        final String[] result = strings.toArray(new String[strings.size()]);
-        equals(expectedPartCount, result.length);
+        final String[] result = strings.toArray(new String[0]);
+        isTrue(expectedPartCount == result.length, "Splitting {0} ({1}) on {2} has to return {3} parts and not {4}", string, stringDescription, expectedPartCount, result.length);
         return result;
     }
 
-    public static AssertionException unhandledEnum(final Enum<?> enumValue) {
+    // old concept
+
+    public static void greater(int lowerBoundExclusive, int value) {
+        greater(lowerBoundExclusive, value, "{0} is not greater than {1}", value, lowerBoundExclusive);
+    }
+
+    public static void greater(int lowerBoundExclusive, int value, String pattern, Object... args) {
+        isTrue(value > lowerBoundExclusive, pattern, args);
+    }
+
+    public static void greater(long lowerBoundExclusive, long value) {
+        greater(lowerBoundExclusive, value, "{0} is not greater than {1}", value, lowerBoundExclusive);
+    }
+
+    public static void greater(long lowerBoundExclusive, long value, String pattern, Object... args) {
+        isTrue(value > lowerBoundExclusive, pattern, args);
+    }
+
+    public static void greater(byte lowerBoundExclusive, byte value) {
+        greater(lowerBoundExclusive, value, "{0} is not greater than {1}", value, lowerBoundExclusive);
+    }
+
+    public static void greater(byte lowerBoundExclusive, byte value, String pattern, Object... args) {
+        isTrue(value > lowerBoundExclusive, pattern, args);
+    }
+
+    public static void greater(short lowerBoundExclusive, short value) {
+        greater(lowerBoundExclusive, value, "{0} is not greater than {1}", value, lowerBoundExclusive);
+    }
+
+    public static void greater(short lowerBoundExclusive, short value, String pattern, Object... args) {
+        isTrue(value > lowerBoundExclusive, pattern, args);
+    }
+
+    public static void greaterOrEqual(int lowerBound, int value) {
+        greaterOrEqual(lowerBound, value, "{0} is less than {1}", value, lowerBound);
+    }
+
+    public static void greaterOrEqual(int lowerBound, int value, String pattern, Object... args) {
+        isTrue(value >= lowerBound, pattern, args);
+    }
+
+    public static void greaterOrEqual(long lowerBound, long value) {
+        greaterOrEqual(lowerBound, value, "{0} is less than {1}", value, lowerBound);
+    }
+
+    public static void greaterOrEqual(long lowerBound, long value, String pattern, Object... args) {
+        isTrue(value >= lowerBound, pattern, args);
+    }
+
+    public static void greaterOrEqual(byte lowerBound, byte value) {
+        greaterOrEqual(lowerBound, value, "{0} is less than {1}", value, lowerBound);
+    }
+
+    public static void greaterOrEqual(byte lowerBound, byte value, String pattern, Object... args) {
+        isTrue(value >= lowerBound, pattern, args);
+    }
+
+    public static void greaterOrEqual(short lowerBound, short value) {
+        greaterOrEqual(lowerBound, value, "{0} is less than {1}", value, lowerBound);
+    }
+
+    public static void greaterOrEqual(short lowerBound, short value, String pattern, Object... args) {
+        isTrue(value >= lowerBound, pattern, args);
+    }
+
+    public static void less(int upperBoundExclusive, int value) {
+        less(upperBoundExclusive, value, "{0} is not less than {1}", value, upperBoundExclusive);
+    }
+
+    public static void less(int upperBoundExclusive, int value, String pattern, Object... args) {
+        isTrue(value < upperBoundExclusive, pattern, args);
+    }
+
+    public static void less(long upperBoundExclusive, long value) {
+        less(upperBoundExclusive, value, "{0} is not less than {1}", value, upperBoundExclusive);
+    }
+
+    public static void less(long upperBoundExclusive, long value, String pattern, Object... args) {
+        isTrue(value < upperBoundExclusive, pattern, args);
+    }
+
+    public static void less(byte upperBoundExclusive, byte value) {
+        less(upperBoundExclusive, value, "{0} is not less than {1}", value, upperBoundExclusive);
+    }
+
+    public static void less(byte upperBoundExclusive, byte value, String pattern, Object... args) {
+        isTrue(value < upperBoundExclusive, pattern, args);
+    }
+
+    public static void less(short upperBoundExclusive, short value) {
+        less(upperBoundExclusive, value, "{0} is not less than {1}", value, upperBoundExclusive);
+    }
+
+    public static void less(short upperBoundExclusive, short value, String pattern, Object... args) {
+        isTrue(value < upperBoundExclusive, pattern, args);
+    }
+
+    public static void lessOrEqual(int upperBound, int value) {
+        lessOrEqual(upperBound, value, "{0} is greater than {1}", value, upperBound);
+    }
+
+    public static void lessOrEqual(int upperBound, int value, String pattern, Object... args) {
+        isTrue(value <= upperBound, pattern, args);
+    }
+
+    public static void lessOrEqual(long upperBound, long value) {
+        lessOrEqual(upperBound, value, "{0} is greater than {1}", value, upperBound);
+    }
+
+    public static void lessOrEqual(long upperBound, long value, String pattern, Object... args) {
+        isTrue(value <= upperBound, pattern, args);
+    }
+
+    public static void lessOrEqual(byte upperBound, byte value) {
+        lessOrEqual(upperBound, value, "{0} is greater than {1}", value, upperBound);
+    }
+
+    public static void lessOrEqual(byte upperBound, byte value, String pattern, Object... args) {
+        isTrue(value <= upperBound, pattern, args);
+    }
+
+    public static void lessOrEqual(short upperBound, short value) {
+        lessOrEqual(upperBound, value, "{0} is greater than {1}", value, upperBound);
+    }
+
+    public static void lessOrEqual(short upperBound, short value, String pattern, Object... args) {
+        isTrue(value <= upperBound, pattern, args);
+    }
+
+    public static AssertionException unhandledEnum(Enum<?> enumValue) {
         throw createFail("unhandled enum value: {0}", enumValue); //$NON-NLS-1$
     }
 
-    public static void instanceOf(final Object object, final Class<?> clazz) {
+    public static void instanceOf(Object object, Class<?> clazz) {
         instanceOf(object, clazz, "{0} not instance of {1}", object, clazz);
     }
 
-    public static void instanceOf(final Object object, final Class<?> clazz, final String pattern, final Object... args) {
+    public static void instanceOf(Object object, Class<?> clazz, String pattern, Object... args) {
         if (object != null && !clazz.isInstance(object)) {
             AssertUtil.fail(pattern, args);
         }
-    }
-
-    public static String[] matches(final String pattern, final String input) {
-        return matches(Pattern.compile(pattern), input);
-    }
-
-    public static String[] matches(final Pattern pattern, final String input) {
-        final Matcher matcher = pattern.matcher(input);
-        if (!matcher.matches()) {
-            throw AssertUtil.createFail("value {0}: not matching pattern {1}", input, pattern);
-        }
-        final int groupCount = matcher.groupCount();
-        final String[] result = new String[groupCount];
-        for (int groupIndex = 0; groupIndex < groupCount; groupIndex++) {
-            result[groupIndex] = matcher.group(groupIndex + 1);
-        }
-        return result;
     }
 
 }

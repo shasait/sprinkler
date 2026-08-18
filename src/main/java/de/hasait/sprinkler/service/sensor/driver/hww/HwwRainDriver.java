@@ -18,6 +18,8 @@ package de.hasait.sprinkler.service.sensor.driver.hww;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
@@ -135,19 +137,19 @@ public class HwwRainDriver implements SensorDriver<HwwConfiguration> {
 
         String urlString = urlStringBuilder.toString();
 
-        URL url;
+        URI uri;
         try {
-            url = new URL(urlString);
-        } catch (MalformedURLException e) {
-            throw new RuntimeException("Invalid URL: " + urlString, e);
+            uri = new URI(urlString);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException("Invalid URI: " + urlString, e);
         }
 
         LOG.debug(urlString);
         String resultJsonString;
         try {
-            resultJsonString = IOUtils.toString(url, StandardCharsets.UTF_8);
+            resultJsonString = IOUtils.toString(uri, StandardCharsets.UTF_8);
         } catch (IOException e) {
-            throw new RuntimeException("Cannot read from URL: " + url, e);
+            throw new RuntimeException("Cannot read from URI: " + uri, e);
         }
 
         RainResult result;
@@ -162,7 +164,7 @@ public class HwwRainDriver implements SensorDriver<HwwConfiguration> {
             long maxEnde = result.features.stream().map(RainFeature::getAttributes).map(RainFeatureAttributes::getEnde)
                     .reduce(Long::max).get();
             List<Integer> regenhoehen = result.features.stream().map(RainFeature::getAttributes).filter(a -> a.getEnde() == maxEnde)
-                    .map(RainFeatureAttributes::getRegenhoehe).collect(Collectors.toList());
+                    .map(RainFeatureAttributes::getRegenhoehe).toList();
             int regenhoeheAverage = regenhoehen.stream().reduce(Integer::sum).get() / regenhoehen.size();
             return createValue(maxEnde, regenhoeheAverage);
         } else {

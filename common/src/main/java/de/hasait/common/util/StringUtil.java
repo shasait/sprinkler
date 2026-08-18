@@ -19,12 +19,16 @@ package de.hasait.common.util;
 import java.util.HexFormat;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.event.Level;
+
 /**
  *
  */
 public final class StringUtil {
 
-    private static final HexFormat HEX_FORMAT = HexFormat.ofDelimiter(" ").withUpperCase();
+    private static final HexFormat HEX_FORMAT_SPACE = HexFormat.ofDelimiter(" ").withUpperCase();
+    private static final HexFormat HEX_FORMAT_NOSPACE = HexFormat.ofDelimiter("").withUpperCase();
 
     private static final Pattern TRUE_PATTERN = Pattern.compile("on|yes|true|enable|active", Pattern.CASE_INSENSITIVE);
 
@@ -33,8 +37,8 @@ public final class StringUtil {
      *
      * @return <code>true</code> if ignore case "on", "yes", "true", "enable", "active"; else <code>false</code>.
      */
-    public static boolean toBoolean(final String pString) {
-        return pString != null && TRUE_PATTERN.matcher(pString).matches();
+    public static boolean toBoolean(String string) {
+        return string != null && TRUE_PATTERN.matcher(string).matches();
     }
 
     /**
@@ -42,19 +46,19 @@ public final class StringUtil {
      *
      * @return The {@link Integer} or <code>null</code> if not parseable.
      */
-    public static Integer toInteger(final String pString) {
+    public static Integer toInteger(String string) {
         try {
-            return Integer.parseInt(pString);
-        } catch (final NumberFormatException pE) {
+            return Integer.parseInt(string);
+        } catch (NumberFormatException e) {
             return null;
         }
     }
 
-    public static String unsignedBytesToHex(final String pSplit, final int... pUnsignedBytes) {
+    public static String unsignedBytesToHex(String pSplit, int... pUnsignedBytes) {
         final StringBuilder sb = new StringBuilder();
         if (pUnsignedBytes != null) {
             boolean first = true;
-            for (final int unsignedByte : pUnsignedBytes) {
+            for (int unsignedByte : pUnsignedBytes) {
                 if (first) {
                     first = false;
                 } else if (pSplit != null) {
@@ -70,28 +74,77 @@ public final class StringUtil {
         return sb.toString();
     }
 
+    public static String booleansToString(boolean... bits) {
+        return booleansToString('1', '0', bits);
+    }
+
+    public static String booleansToString(char trueChar, char falseChar, boolean... bits) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < bits.length; i++) {
+            sb.append(bits[i] ? trueChar : falseChar);
+        }
+        return sb.toString();
+    }
+
+    public static String booleansWithNullToString(char nullChar, Boolean... bits) {
+        return booleansWithNullToString('1', '0', nullChar, bits);
+    }
+
+    public static String booleansWithNullToString(char trueChar, char falseChar, char nullChar, Boolean... bits) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < bits.length; i++) {
+            Boolean bit = bits[i];
+            if (bit != null) {
+                sb.append(bit ? trueChar : falseChar);
+            } else {
+                sb.append(nullChar);
+            }
+        }
+        return sb.toString();
+    }
+
     public static String byteToHex(byte data) {
-        return HEX_FORMAT.toHexDigits(data);
+        return HEX_FORMAT_SPACE.toHexDigits(data);
     }
 
     public static String bytesToHex(byte[] data) {
-        return HEX_FORMAT.formatHex(data);
+        if (data == null) {
+            return null;
+        }
+        return HEX_FORMAT_SPACE.formatHex(data);
+    }
+
+    public static String bytesToHexNoSpace(byte[] data) {
+        if (data == null) {
+            return null;
+        }
+        return HEX_FORMAT_NOSPACE.formatHex(data);
     }
 
     public static String bytesToHex(byte[] data, int offset) {
-        return HEX_FORMAT.formatHex(data, offset, data.length);
+        if (data == null) {
+            return null;
+        }
+        return HEX_FORMAT_SPACE.formatHex(data, offset, data.length);
     }
 
     public static String bytesToHex(byte[] data, int offset, int len) {
-        return HEX_FORMAT.formatHex(data, offset, offset + len);
+        if (data == null) {
+            return null;
+        }
+        return HEX_FORMAT_SPACE.formatHex(data, offset, offset + len);
     }
 
     public static byte[] hexToBytes(String string) {
-        return HEX_FORMAT.parseHex(string);
+        return HEX_FORMAT_SPACE.parseHex(string);
+    }
+
+    public static byte[] hexToBytesNoSpace(String string) {
+        return HEX_FORMAT_NOSPACE.parseHex(string);
     }
 
     public static byte hexToByte(String string) {
-        byte[] bytes = HEX_FORMAT.parseHex(string);
+        byte[] bytes = HEX_FORMAT_SPACE.parseHex(string);
         if (bytes.length != 1) {
             throw new IllegalArgumentException();
         }
@@ -120,18 +173,19 @@ public final class StringUtil {
         return sb.toString();
     }
 
-    public static Byte bits07ToByte(String bits0to7as01char) {
-        if (bits0to7as01char == null) {
+    public static Byte bitsToByte(String bitsAs01WithMsbLeft) {
+        if (bitsAs01WithMsbLeft == null) {
             return null;
         }
         int unsignedInt = 0;
-        int v = 1;
-        for (int i = 0; i < bits0to7as01char.length(); i++) {
-            char c = bits0to7as01char.charAt(i);
+        int bitValue = 1;
+        int l = bitsAs01WithMsbLeft.length() - 1;
+        for (int i = 0; i <= l; i++) {
+            char c = bitsAs01WithMsbLeft.charAt(l - i);
             if (c == '1') {
-                unsignedInt += v;
+                unsignedInt += bitValue;
             }
-            v *= 2;
+            bitValue <<= 1;
         }
         return (byte) unsignedInt;
     }
@@ -165,6 +219,12 @@ public final class StringUtil {
 
     public static String toStringForByte(String what, byte data) {
         return what + "=" + Byte.toUnsignedInt(data) + " (" + StringUtil.byteToHex(data) + ")";
+    }
+
+    public static void logBytes(Logger logger, Level level, String msgPrefix, byte[] bytes) {
+        if (logger.isEnabledForLevel(level)) {
+            logger.atLevel(level).log(msgPrefix + StringUtil.bytesToHex(bytes) + " " + StringUtil.bytesToAscii(bytes));
+        }
     }
 
     private StringUtil() {

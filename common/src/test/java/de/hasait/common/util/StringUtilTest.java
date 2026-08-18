@@ -24,38 +24,38 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 public class StringUtilTest {
 
     @Test
-    public void testBits07ToByte_null() {
-        assertNull(StringUtil.bits07ToByte(null));
+    public void testBitsToByte_null() {
+        assertNull(StringUtil.bitsToByte(null));
     }
 
     @Test
-    public void testBits07ToByte_zero() {
-        assertEquals(0, StringUtil.bits07ToByte("0").byteValue());
-        assertEquals(0, StringUtil.bits07ToByte("00").byteValue());
-        assertEquals(0, StringUtil.bits07ToByte("000").byteValue());
-        assertEquals(0, StringUtil.bits07ToByte("0000").byteValue());
+    public void testBitsToByte_zero() {
+        assertEquals(0, StringUtil.bitsToByte("0").byteValue());
+        assertEquals(0, StringUtil.bitsToByte("00").byteValue());
+        assertEquals(0, StringUtil.bitsToByte("000").byteValue());
+        assertEquals(0, StringUtil.bitsToByte("0000").byteValue());
     }
 
     @Test
-    public void testBits07ToByte_one() {
-        assertEquals(1, StringUtil.bits07ToByte("1").byteValue());
-        assertEquals(1, StringUtil.bits07ToByte("10").byteValue());
-        assertEquals(1, StringUtil.bits07ToByte("100").byteValue());
-        assertEquals(1, StringUtil.bits07ToByte("1000").byteValue());
+    public void testBitsToByte_one() {
+        assertEquals(1, StringUtil.bitsToByte("1").byteValue());
+        assertEquals(1, StringUtil.bitsToByte("01").byteValue());
+        assertEquals(1, StringUtil.bitsToByte("001").byteValue());
+        assertEquals(1, StringUtil.bitsToByte("0001").byteValue());
     }
 
     @Test
-    public void testBits07ToByte_two() {
-        assertEquals(2, StringUtil.bits07ToByte("01").byteValue());
-        assertEquals(2, StringUtil.bits07ToByte("010").byteValue());
-        assertEquals(2, StringUtil.bits07ToByte("0100").byteValue());
-        assertEquals(2, StringUtil.bits07ToByte("01000").byteValue());
+    public void testBitsToByte_two() {
+        assertEquals(2, StringUtil.bitsToByte("10").byteValue());
+        assertEquals(2, StringUtil.bitsToByte("010").byteValue());
+        assertEquals(2, StringUtil.bitsToByte("0010").byteValue());
+        assertEquals(2, StringUtil.bitsToByte("00010").byteValue());
     }
 
     @Test
-    public void testBits07ToByte_255() {
+    public void testBitsToByte_255() {
         assertEquals(255, Byte.toUnsignedInt((byte) -1));
-        assertEquals(-1, StringUtil.bits07ToByte("11111111").byteValue());
+        assertEquals(-1, StringUtil.bitsToByte("11111111").byteValue());
     }
 
 }

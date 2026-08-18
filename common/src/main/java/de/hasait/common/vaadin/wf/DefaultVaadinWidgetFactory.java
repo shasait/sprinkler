@@ -16,6 +16,8 @@
 
 package de.hasait.common.vaadin.wf;
 
+import java.util.function.Consumer;
+
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEventListener;
@@ -36,7 +38,11 @@ import com.vaadin.flow.function.ValueProvider;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+import de.hasait.common.util.listener.ValueChange;
+import de.hasait.common.service.HasId;
+import de.hasait.common.service.Store;
 import de.hasait.common.util.I18nSupport;
+import de.hasait.common.vaadin.VaadinUtil;
 
 public class DefaultVaadinWidgetFactory implements VaadinWidgetFactory {
 
@@ -60,24 +66,36 @@ public class DefaultVaadinWidgetFactory implements VaadinWidgetFactory {
 
     @Nonnull
     @Override
-    public TextField createTextField(@Nonnull String key) {
-        var field = new TextField(i18nSupport.labelText(key));
-        return initField(field, key);
+    public TextField createTextField(@Nonnull String baseKey) {
+        var field = new TextField(i18nSupport.labelText(baseKey));
+        return initField(field, baseKey);
     }
 
     @Nonnull
     @Override
-    public TextField createRoTextField(@Nonnull String key) {
-        var field = createTextField(key);
+    public TextField createRoTextField(@Nonnull String baseKey) {
+        var field = createTextField(baseKey);
         field.setReadOnly(true);
         return field;
     }
 
     @Nonnull
     @Override
-    public <T> ComboBox<T> createComboBox(@Nonnull String key) {
-        var field = new ComboBox<T>(i18nSupport.labelText(key));
-        return initField(field, key);
+    public <T> ComboBox<T> createComboBox(@Nonnull String baseKey) {
+        var field = new ComboBox<T>(i18nSupport.labelText(baseKey));
+        return initField(field, baseKey);
+    }
+
+    @Override
+    @Nonnull
+    public <B extends HasId<ID>, ID> ComboBox<B> createComboBox(@Nonnull String baseKey, @Nonnull Store<B, ID> store, @Nullable Consumer<ValueChange<B>> valueChangeListener) {
+        ComboBox<B> field = createComboBox(baseKey);
+        field.setDataProvider(VaadinUtil.createBestDataProvider(store), SerializableFunction.identity());
+        field.setAllowCustomValue(false);
+        if (valueChangeListener != null) {
+            field.addValueChangeListener(event -> valueChangeListener.accept(new ValueChange<>(event.getOldValue(), event.getValue())));
+        }
+        return field;
     }
 
     @Nonnull
@@ -89,28 +107,28 @@ public class DefaultVaadinWidgetFactory implements VaadinWidgetFactory {
 
     @Nonnull
     @Override
-    public Button createButton(@Nonnull String key, @Nullable Icon icon, @Nullable ComponentEventListener<ClickEvent<Button>> clickListener) {
-        var field = new Button(i18nSupport.labelText(key));
+    public Button createButton(@Nonnull String baseKey, @Nullable Icon icon, @Nullable ComponentEventListener<ClickEvent<Button>> clickListener) {
+        var field = new Button(i18nSupport.labelText(baseKey));
         if (icon != null) {
             field.setIcon(icon);
         }
         if (clickListener != null) {
             field.addClickListener(clickListener);
         }
-        return initField(field, key);
+        return initField(field, baseKey);
     }
 
     @Override
-    public <B> Grid.Column<B> addValueColumn(@Nonnull Grid<B> grid, @Nonnull ValueProvider<B, ?> valueProvider, String key) {
+    public <B> Grid.Column<B> addValueColumn(@Nonnull Grid<B> grid, @Nonnull ValueProvider<B, ?> valueProvider, String baseKey) {
         Grid.Column<B> column = grid.addColumn(valueProvider);
-        column.setHeader(i18nSupport.headerText(key));
+        column.setHeader(i18nSupport.headerText(baseKey));
         return column;
     }
 
     @Override
-    public <B> Grid.Column<B> addComponentColumn(@Nonnull Grid<B> grid, @Nonnull SerializableFunction<B, ? extends Component> componentFunction, String key) {
+    public <B> Grid.Column<B> addComponentColumn(@Nonnull Grid<B> grid, @Nonnull SerializableFunction<B, ? extends Component> componentFunction, String baseKey) {
         Grid.Column<B> column = grid.addColumn(new ComponentRenderer<>(componentFunction));
-        column.setHeader(i18nSupport.headerText(key));
+        column.setHeader(i18nSupport.headerText(baseKey));
         return column;
     }
 

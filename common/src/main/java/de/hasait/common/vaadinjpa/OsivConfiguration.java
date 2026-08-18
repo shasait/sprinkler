@@ -16,6 +16,8 @@
 
 package de.hasait.common.vaadinjpa;
 
+import jakarta.servlet.DispatcherType;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter;
@@ -24,10 +26,19 @@ import org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter;
 public class OsivConfiguration {
 
     @Bean
-    public OpenEntityManagerInViewFilter openSessionInViewFilter() {
-        OpenEntityManagerInViewFilter filter = new OpenEntityManagerInViewFilter();
-        filter.setEntityManagerFactoryBeanName("entityManagerFactory");
-        return filter;
+    public FilterRegistrationBean<OpenEntityManagerInViewFilter> openEntityManagerInViewFilterRegistration() {
+        FilterRegistrationBean<OpenEntityManagerInViewFilter> registration = new FilterRegistrationBean<>();
+        registration.setFilter(openEntityManagerInViewFilter());
+        registration.addUrlPatterns("/*");
+        registration.setOrder(0);
+        registration.setName("openEntityManagerInViewFilter");
+        registration.setDispatcherTypes(DispatcherType.REQUEST, DispatcherType.ASYNC);
+        return registration;
+    }
+
+    @Bean(name = "openEntityManagerInViewFilter")
+    public OpenEntityManagerInViewFilter openEntityManagerInViewFilter() {
+        return new OpenEntityManagerInViewFilter();
     }
 
 }

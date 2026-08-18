@@ -27,15 +27,15 @@ public class AssertionException extends RuntimeException {
 		super();
 	}
 
-	public AssertionException(final String message) {
+	public AssertionException(String message) {
 		super(message);
 	}
 
-	public AssertionException(final String message, final Throwable cause) {
+	public AssertionException(String message, Throwable cause) {
 		super(message, cause);
 	}
 
-	public AssertionException(final Throwable cause) {
+	public AssertionException(Throwable cause) {
 		super(cause);
 	}
 

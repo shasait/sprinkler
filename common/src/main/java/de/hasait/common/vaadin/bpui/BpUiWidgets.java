@@ -47,6 +47,8 @@ public final class BpUiWidgets<B> {
         return beanClass;
     }
 
+    // TODO LayoutGroups: Set<String> getLayoutGroups()
+
     public void register(BpUiWidget<B> puiWidget) {
         widgets.add(puiWidget);
         needsSorting = true;
@@ -54,10 +56,11 @@ public final class BpUiWidgets<B> {
 
     public void registerField(String key, HasValue<?, ?> field) {
         HasValue<?, ?> oldField = fieldRegistry.put(key, field);
-        AssertUtil.isNull(oldField, "Field {0} already registered", key);
+        AssertUtil.isNullWithPattern(oldField, "Field {0} already registered", key);
     }
 
     public void populateForm(FormLayout formLayout) {
+        // TODO LayoutGroups: add parameter String layoutGroup and filter widgets
         ensureSorted();
         widgets.forEach(widget -> widget.populateForm(formLayout));
     }
@@ -75,13 +78,14 @@ public final class BpUiWidgets<B> {
     }
 
     public void populateGrid(Grid<B> beanGrid) {
+        // TODO LayoutGroups: add parameter String layoutGroup and filter widgets
         ensureSorted();
         widgets.forEach(widget -> widget.populateGrid(beanGrid));
     }
 
     public void addValueChangeListener(String key, HasValue.ValueChangeListener<HasValue.ValueChangeEvent<?>> listener) {
         HasValue<?, ?> field = fieldRegistry.get(key);
-        AssertUtil.notNull(field, "Field {0} not registered", key);
+        AssertUtil.notNullWithPattern(field, "Field {0} not registered", key);
         field.addValueChangeListener(listener);
     }
 

@@ -31,11 +31,11 @@ public final class MessageFormatUtil {
     private static final Logger LOG = LoggerFactory.getLogger(MessageFormatUtil.class);
 
     @Nonnull
-    public static String format(final String pattern, final Object... args) {
+    public static String format(String pattern, Object... args) {
         if (pattern != null) {
             try {
                 return MessageFormat.format(pattern, args);
-            } catch (final IllegalArgumentException pE) {
+            } catch (IllegalArgumentException pE) {
                 LOG.debug("IAE: " + pattern, pE);
             }
             return "!IAE!" + pattern + "!" + ArrayUtils.toString(args) + "!";

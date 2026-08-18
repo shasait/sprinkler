@@ -35,8 +35,8 @@ public abstract class AbstractCrudForm<ID, B extends HasId<ID>, S extends Store<
     }
 
     @Override
-    protected final void saveAndFlushBean(B bean) {
-        store.addOrUpdateBean(bean);
+    protected final B saveAndFlushBean(B bean) {
+        return store.addOrUpdateBean(bean);
     }
 
     @Override

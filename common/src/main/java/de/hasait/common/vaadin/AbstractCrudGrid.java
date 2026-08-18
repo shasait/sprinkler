@@ -52,7 +52,7 @@ public abstract class AbstractCrudGrid<ID, B extends HasId<ID>, S extends Store<
             add(crudForm);
             addSelectionConsumer(crudForm::setBean);
             addAfterCrudForm();
-            crudForm.addListener(this::updateGrid);
+            crudForm.addChangeListener((s, v) -> updateGrid());
         }
     }
 

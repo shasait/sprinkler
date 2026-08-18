@@ -16,6 +16,8 @@
 
 package de.hasait.common.vaadin;
 
+ import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
@@ -23,6 +25,8 @@ import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.router.RouterState;
+import com.vaadin.flow.signals.Signal;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.vaadin.flow.theme.lumo.LumoUtility;
@@ -55,8 +59,13 @@ public final class MainLayout extends AppLayout {
     }
 
     private void createHeader() {
-        H1 logoH1 = new H1(i18nSupport.applicationTitle());
+        Signal<RouterState> routerState = UI.getCurrent().routerStateSignal();
+        H1 logoH1 = new H1();
         logoH1.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.Margin.MEDIUM);
+        logoH1.bindText(routerState.map(state -> {
+            Class<? extends Component> viewClass = state != null ? state.navigationTarget() : null;
+            return viewClass != null ? i18nSupport.applicationAndPageTitle(viewClass) : i18nSupport.applicationTitle();
+        }));
 
         String loggedInUsername = securityService.getAuthenticatedUser().getUsername();
         Button logoutButton = new Button(i18nSupport.msgkka("logoutButton.labelWithUser", loggedInUsername), e -> securityService.logout());

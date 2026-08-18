@@ -17,6 +17,8 @@
 package de.hasait.sprinkler.service.relay.driver.taspow;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
@@ -59,8 +61,8 @@ public class TasmotaPowerRelayDriver extends AbstractPinBasedRelayDriver<Tasmota
         String value = active ? "1" : "0";
         String url = MessageFormatUtil.format(SET_STATE_URL, config.host, config.index, value);
         try {
-            IOUtils.toString(new URL(url), StandardCharsets.UTF_8);
-        } catch (IOException e) {
+            IOUtils.toString(new URI(url), StandardCharsets.UTF_8);
+        } catch (IOException | URISyntaxException e) {
             throw new RuntimeException(e);
         }
     }

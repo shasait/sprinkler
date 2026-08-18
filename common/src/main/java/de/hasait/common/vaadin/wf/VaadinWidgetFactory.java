@@ -16,6 +16,8 @@
 
 package de.hasait.common.vaadin.wf;
 
+import java.util.function.Consumer;
+
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEventListener;
@@ -32,6 +34,9 @@ import com.vaadin.flow.function.ValueProvider;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+import de.hasait.common.util.listener.ValueChange;
+import de.hasait.common.service.HasId;
+import de.hasait.common.service.Store;
 import de.hasait.common.util.I18nSupport;
 
 public interface VaadinWidgetFactory {
@@ -39,40 +44,42 @@ public interface VaadinWidgetFactory {
     @Nonnull
     I18nSupport getI18nSupport();
 
-    int determineLayoutPriority(@Nonnull String key);
+    int determineLayoutPriority(@Nonnull String baseKey);
 
     @Nonnull
-    TextField createTextField(@Nonnull String key);
+    TextField createTextField(@Nonnull String baseKey);
 
     @Nonnull
-    TextField createRoTextField(@Nonnull String key);
+    TextField createRoTextField(@Nonnull String baseKey);
 
-    <T> @Nonnull ComboBox<T> createComboBox(@Nonnull String key);
+    <T> @Nonnull ComboBox<T> createComboBox(@Nonnull String baseKey);
+
+    <B extends HasId<ID>, ID> @Nonnull ComboBox<B> createComboBox(@Nonnull String baseKey, @Nonnull Store<B, ID> store, @Nullable Consumer<ValueChange<B>> valueChangeListener);
 
     @Nonnull
     Checkbox createCheckBox(@Nonnull String key);
 
-    default @Nonnull Button createButton(@Nonnull String key, @Nullable ComponentEventListener<ClickEvent<Button>> clickListener) {
-        return createButton(key, (Icon) null, clickListener);
+    default @Nonnull Button createButton(@Nonnull String baseKey, @Nullable ComponentEventListener<ClickEvent<Button>> clickListener) {
+        return createButton(baseKey, (Icon) null, clickListener);
     }
 
-    default @Nonnull Button createButton(String key, VaadinIcon vaadinIcon, @Nullable ComponentEventListener<ClickEvent<Button>> clickListener) {
-        return createButton(key, vaadinIcon.create(), clickListener);
+    default @Nonnull Button createButton(String baseKey, VaadinIcon vaadinIcon, @Nullable ComponentEventListener<ClickEvent<Button>> clickListener) {
+        return createButton(baseKey, vaadinIcon.create(), clickListener);
     }
 
     @Nonnull
-    Button createButton(@Nonnull String key, @Nullable Icon icon, @Nullable ComponentEventListener<ClickEvent<Button>> clickListener);
+    Button createButton(@Nonnull String baseKey, @Nullable Icon icon, @Nullable ComponentEventListener<ClickEvent<Button>> clickListener);
 
-    <B> @Nonnull Grid.Column<B> addValueColumn(@Nonnull Grid<B> grid, @Nonnull ValueProvider<B, ?> valueProvider, @Nonnull String key);
+    <B> @Nonnull Grid.Column<B> addValueColumn(@Nonnull Grid<B> grid, @Nonnull ValueProvider<B, ?> valueProvider, @Nonnull String baseKey);
 
-    <B> @Nonnull Grid.Column<B> addComponentColumn(@Nonnull Grid<B> grid, @Nonnull SerializableFunction<B, ? extends Component> componentFunction, @Nonnull String key);
+    <B> @Nonnull Grid.Column<B> addComponentColumn(@Nonnull Grid<B> grid, @Nonnull SerializableFunction<B, ? extends Component> componentFunction, @Nonnull String baseKey);
 
-    void addHeader(@Nonnull HasComponents layout, @Nonnull String key);
+    void addHeader(@Nonnull HasComponents layout, @Nonnull String baseKey);
 
-    void addHeader(@Nonnull HasComponents layout, @Nonnull String key, int colspan);
+    void addHeader(@Nonnull HasComponents layout, @Nonnull String baseKey, int colspan);
 
     void addSpacer(@Nonnull HasComponents layout);
 
-    <F> @Nonnull F initField(@Nonnull F field, @Nonnull String key);
+    <F> @Nonnull F initField(@Nonnull F field, @Nonnull String baseKey);
 
 }

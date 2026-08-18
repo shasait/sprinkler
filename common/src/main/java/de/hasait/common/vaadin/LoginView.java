@@ -25,11 +25,13 @@ import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import com.vaadin.flow.spring.annotation.UIScope;
 
 import de.hasait.common.util.I18nSupport;
 
 @Route("login")
 @SpringComponent
+@UIScope
 @AnonymousAllowed
 public class LoginView extends VerticalLayout implements BeforeEnterObserver, HasDynamicTitle {
 
@@ -60,7 +62,7 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver, Ha
 
     @Override
     public String getPageTitle() {
-        return i18nSupport.applicationAndPageTitle("login", "form");
+        return i18nSupport.applicationAndPageTitle(getClass());
     }
 
 }

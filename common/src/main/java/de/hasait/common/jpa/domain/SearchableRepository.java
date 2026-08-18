@@ -19,6 +19,7 @@ package de.hasait.common.jpa.domain;
 import java.util.List;
 import java.util.Optional;
 
+import jakarta.annotation.Nonnull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -44,12 +45,13 @@ public interface SearchableRepository<PO extends PersistantObject> extends JpaRe
     }
 
     @Override
-    default Optional<PO> findBeanById(Long id) {
+    default Optional<PO> findBeanById(@Nonnull Long id) {
         return findById(id);
     }
 
+    @Nonnull
     @Override
-    default <EB extends PO> EB addOrUpdateBean(EB bean) {
+    default <EB extends PO> EB addOrUpdateBean(@Nonnull EB bean) {
         return saveAndFlush(bean);
     }
 

@@ -17,7 +17,9 @@
 package de.hasait.common.vaadin.bpui.impl;
 
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.binder.Binder;
 import jakarta.annotation.Nonnull;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import de.hasait.common.util.BeanProperty;
@@ -36,7 +38,12 @@ public class StringAsTextFieldBpUiFactory extends AbstractBpUiFactory<Object, St
     @Nonnull
     @Override
     public <B, P extends String> BpUiWidget<B> createWidget(@Nonnull BpUiWidgets<B> bpUiWidgets, @Nonnull BeanProperty<B, P> beanProperty) {
-        return new SimpleBpUiWidget<>(bpUiWidgets, beanProperty, getI18nSupport(), TextField::new);
+        return new SimpleBpUiWidget<>(bpUiWidgets, beanProperty, getI18nSupport(), TextField::new) {
+            @Override
+            protected Binder.BindingBuilder<B, String> customizeBindingFv(Binder.BindingBuilder<B, String> bindingBuilder) {
+                return super.customizeBindingFv(bindingBuilder).withNullRepresentation(StringUtils.EMPTY);
+            }
+        };
     }
 
 }

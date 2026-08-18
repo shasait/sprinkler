@@ -28,7 +28,7 @@ public class AbstractNameDescPO extends AbstractPO implements HasNameDesc {
 
     @Size(min = 1, max = 32)
     @NotNull
-    @Column(name = "NAME", unique = true, nullable = false)
+    @Column(name = "NAME", nullable = false)
     protected String name;
 
     @Size(max = 128)
@@ -53,6 +53,11 @@ public class AbstractNameDescPO extends AbstractPO implements HasNameDesc {
     @Override
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + " (" + name + ")";
     }
 
 }

@@ -39,7 +39,7 @@ public class EnumBpUiFactory extends AbstractBpUiFactory<Object, Enum<?>> {
             ComboBox<Enum<?>> field = new ComboBox<>(labelText);
             //noinspection unchecked
             field.setItems(((Class<Enum<?>>) beanProperty.getPropertyClass()).getEnumConstants());
-            field.setItemLabelGenerator(Object::toString);
+            field.setItemLabelGenerator(e -> getI18nSupport().enumText(e));
             return field;
         });
     }

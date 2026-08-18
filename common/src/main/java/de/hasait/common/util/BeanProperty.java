@@ -67,7 +67,7 @@ public final class BeanProperty<B, P> {
             final BeanInfo beanInfo = Introspector.getBeanInfo(beanClass);
             final PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
             final BeanProperties<B> result = new BeanProperties<>();
-            for (final PropertyDescriptor propertyDescriptor : propertyDescriptors) {
+            for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
                 result.add(createBeanProperty(beanClass, propertyDescriptor.getPropertyType(), propertyDescriptor));
             }
             return result;

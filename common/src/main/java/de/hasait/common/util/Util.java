@@ -27,6 +27,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -135,6 +136,35 @@ public class Util {
             return Integer.MIN_VALUE;
         }
         return (int) value;
+    }
+
+    /**
+     * Ensure valueHolder has newValue. Set if it is null; fail if it has another value.
+     */
+    public static <T> void checkOrSet(AtomicReference<T> valueHolder, T newValue) {
+        // TODO implement atomic using updateAndGet
+        T currentValue = valueHolder.get();
+        if (currentValue == null) {
+            valueHolder.set(newValue);
+            return;
+        }
+        if (currentValue.equals(newValue)) {
+            return;
+        }
+        throw new RuntimeException(currentValue + " != " + newValue);
+    }
+
+    public static <K, T> void checkOrSet(Map<K, ? super T> map, K key, T newValue) {
+        // TODO implement atomic using compute
+        Object currentValue = map.get(key);
+        if (currentValue == null) {
+            map.put(key, newValue);
+            return;
+        }
+        if (currentValue.equals(newValue)) {
+            return;
+        }
+        throw new RuntimeException(currentValue + " != " + newValue);
     }
 
 }

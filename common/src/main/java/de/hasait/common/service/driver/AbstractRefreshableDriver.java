@@ -41,7 +41,7 @@ public abstract class AbstractRefreshableDriver<O, C> extends AbstractDriver<C> 
 
     protected final C determineDriverConfig(@Nonnull O owner) {
         var rdi = refreshableDriverInstanceGetter.apply(owner);
-        AssertUtil.equals(getId(), rdi.getDriverId(), "Foreign " + RefreshableDriverInstance.class.getSimpleName());
+        AssertUtil.equals(getId(), "this.driverId", rdi.getDriverId(), "rdi.driverId");
         return parseDriverConfigText(rdi.getDriverConfig());
     }
 

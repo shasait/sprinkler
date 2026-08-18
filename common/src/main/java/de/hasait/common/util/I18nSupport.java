@@ -21,6 +21,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
 
+import com.vaadin.flow.component.Component;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
@@ -33,36 +34,40 @@ public class I18nSupport {
         this.messageSource = messageSource;
     }
 
-    public String labelText(String baseKey) {
-        return msgkka(baseKey + ".label");
+    public <E extends Enum<?>> String enumText(E enumValue) {
+        return labelText("enum." + enumValue.getClass().getSimpleName() + "." + enumValue.name());
     }
 
-    public String headerText(String baseKey) {
-        return msgkka(baseKey + ".header");
+    public String labelText(String baseKey, Object... args) {
+        return msgkka(baseKey + ".label", args);
     }
 
-    public String tooltipText(String baseKey) {
-        return msgkka(baseKey + ".tooltip");
+    public String headerText(String baseKey, Object... args) {
+        return msgkka(baseKey + ".header", args);
     }
 
-    public String tooltipMarkdown(String baseKey) {
-        return msgdka(null, baseKey + ".tooltipMd");
+    public String tooltipMarkdown(String baseKey, Object... args) {
+        return msgdka(null, baseKey + ".tooltipMd", args);
+    }
+
+    public String tooltipText(String baseKey, Object... args) {
+        return msgdka(null, baseKey + ".tooltip", args);
+    }
+
+    public String msgText(String baseKey, Object... args) {
+        return msgkka(baseKey + ".msg", args);
     }
 
     public String applicationTitle() {
         return msgkka("application.title");
     }
 
-    public String pageTitle(String pageKey, String pageType) {
-        return msgkka(pageKey + "." + pageType + ".title");
+    public String pageTitle(Class<? extends Component> viewClass) {
+        return msgkka(viewClass.getSimpleName() + ".title");
     }
 
-    public String applicationAndPageTitle(String pageKey, String pageType) {
-        return applicationTitle() + " | " + pageTitle(pageKey, pageType);
-    }
-
-    public String applicationAndPageTitle(Class<?> clazz, String pageType) {
-        return applicationAndPageTitle(clazz.getSimpleName(), pageType);
+    public String applicationAndPageTitle(Class<? extends Component> viewClass) {
+        return applicationTitle() + " | " + pageTitle(viewClass);
     }
 
     public String format(String baseKey, LocalDateTime localDateTime) {

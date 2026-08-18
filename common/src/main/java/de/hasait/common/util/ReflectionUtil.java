@@ -54,7 +54,7 @@ public final class ReflectionUtil {
 
     private static final Map<String, Annotation> ANNOTATION_CACHE = new ConcurrentHashMap<>();
 
-    public static <T> void addToProperty(final @Nonnull T object, final @Nonnull String propertyName,
+    public static <T> void addToProperty(@Nonnull T object, @Nonnull String propertyName,
                                          final @Nonnull Collection<?> valuesToAdd) {
         Objects.requireNonNull(object, "object");
 
@@ -64,30 +64,30 @@ public final class ReflectionUtil {
     }
 
     @Nonnull
-    public static <T> Function<T, Object> findGetter(final @Nonnull Class<T> type, final @Nonnull String propertyName) {
+    public static <T> Function<T, Object> findGetter(@Nonnull Class<T> type, @Nonnull String propertyName) {
         final PropertyDescriptor propertyDescriptor = getPropertyDescriptor(type, propertyName);
         return getGetter(type, propertyDescriptor);
     }
 
     @Nonnull
-    public static Method findRawGetter(final @Nonnull Class<?> type, final @Nonnull String propertyName) {
+    public static Method findRawGetter(@Nonnull Class<?> type, @Nonnull String propertyName) {
         final PropertyDescriptor propertyDescriptor = getPropertyDescriptor(type, propertyName);
         return getRawGetter(type, propertyDescriptor);
     }
 
     @Nonnull
-    public static Method findRawSetter(final @Nonnull Class<?> type, final @Nonnull String propertyName) {
+    public static Method findRawSetter(@Nonnull Class<?> type, @Nonnull String propertyName) {
         final PropertyDescriptor propertyDescriptor = getPropertyDescriptor(type, propertyName);
         return getRawSetter(type, propertyDescriptor);
     }
 
     @Nonnull
-    public static <T> BiConsumer<T, Object> findSetter(final @Nonnull Class<T> type, final @Nonnull String propertyName) {
+    public static <T> BiConsumer<T, Object> findSetter(@Nonnull Class<T> type, @Nonnull String propertyName) {
         final PropertyDescriptor propertyDescriptor = getPropertyDescriptor(type, propertyName);
         return getSetter(type, propertyDescriptor);
     }
 
-    public static <T> Map<String, Object> getProperties(final @Nonnull T object) {
+    public static <T> Map<String, Object> getProperties(@Nonnull T object) {
         Objects.requireNonNull(object, "object");
 
         final Class<T> type = (Class<T>) object.getClass();
@@ -97,14 +97,14 @@ public final class ReflectionUtil {
         return result;
     }
 
-    public static <T> Object getProperty(final @Nonnull T object, final @Nonnull String propertyName) {
+    public static <T> Object getProperty(@Nonnull T object, @Nonnull String propertyName) {
         Objects.requireNonNull(object, "object");
 
         final Class<T> type = (Class<T>) object.getClass();
         return findGetter(type, propertyName).apply(object);
     }
 
-    public static Map<String, PropertyDescriptor> getPropertyDescriptors(final @Nonnull Class<?> type) {
+    public static Map<String, PropertyDescriptor> getPropertyDescriptors(@Nonnull Class<?> type) {
         Objects.requireNonNull(type, "type");
 
         try {
@@ -114,7 +114,7 @@ public final class ReflectionUtil {
         }
     }
 
-    public static <T> T newInstance(final @Nonnull Class<T> type) {
+    public static <T> T newInstance(@Nonnull Class<T> type) {
         Objects.requireNonNull(type, "type");
 
         try {
@@ -124,14 +124,14 @@ public final class ReflectionUtil {
         }
     }
 
-    public static <T> void setProperty(final @Nonnull T object, final @Nonnull String propertyName, final Object value) {
+    public static <T> void setProperty(@Nonnull T object, @Nonnull String propertyName, Object value) {
         Objects.requireNonNull(object, "object");
 
         final Class<T> type = (Class<T>) object.getClass();
         findSetter(type, propertyName).accept(object, value);
     }
 
-    private static <T> Function<T, Object> getGetter(final @Nonnull Class<T> type, final @Nonnull PropertyDescriptor propertyDescriptor) {
+    private static <T> Function<T, Object> getGetter(@Nonnull Class<T> type, @Nonnull PropertyDescriptor propertyDescriptor) {
         final Method getter = getRawGetter(type, propertyDescriptor);
         return object -> {
             try {
@@ -142,7 +142,7 @@ public final class ReflectionUtil {
         };
     }
 
-    private static PropertyDescriptor getPropertyDescriptor(final @Nonnull Class<?> type, final @Nonnull String propertyName) {
+    private static PropertyDescriptor getPropertyDescriptor(@Nonnull Class<?> type, @Nonnull String propertyName) {
         Objects.requireNonNull(propertyName, "propertyName");
 
         final PropertyDescriptor propertyDescriptor = getPropertyDescriptors(type).get(propertyName);
@@ -151,14 +151,14 @@ public final class ReflectionUtil {
         return propertyDescriptor;
     }
 
-    private static Map<String, PropertyDescriptor> getPropertyDescriptorsInternal(final @Nonnull Class<?> type) {
+    private static Map<String, PropertyDescriptor> getPropertyDescriptorsInternal(@Nonnull Class<?> type) {
         Objects.requireNonNull(type, "type");
 
         try {
             final BeanInfo beanInfo = Introspector.getBeanInfo(type);
             final PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
             final Map<String, PropertyDescriptor> map = new LinkedHashMap<>();
-            for (final PropertyDescriptor propertyDescriptor : propertyDescriptors) {
+            for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
                 map.put(propertyDescriptor.getName(), propertyDescriptor);
             }
             return Collections.unmodifiableMap(map);
@@ -167,19 +167,19 @@ public final class ReflectionUtil {
         }
     }
 
-    private static Method getRawGetter(final @Nonnull Class<?> type, final @Nonnull PropertyDescriptor propertyDescriptor) {
+    private static Method getRawGetter(@Nonnull Class<?> type, @Nonnull PropertyDescriptor propertyDescriptor) {
         final Method getter = propertyDescriptor.getReadMethod();
         return Objects.requireNonNull(getter, () -> MessageFormatUtil
                 .format("No getter found for property {0} of type {1}", propertyDescriptor.getName(), type));
     }
 
-    private static Method getRawSetter(final @Nonnull Class<?> type, final @Nonnull PropertyDescriptor propertyDescriptor) {
+    private static Method getRawSetter(@Nonnull Class<?> type, @Nonnull PropertyDescriptor propertyDescriptor) {
         final Method setter = propertyDescriptor.getWriteMethod();
         return Objects.requireNonNull(setter, () -> MessageFormatUtil
                 .format("No setter found for property {0} of type {1}", propertyDescriptor.getName(), type));
     }
 
-    private static <T> BiConsumer<T, Object> getSetter(final @Nonnull Class<?> type,
+    private static <T> BiConsumer<T, Object> getSetter(@Nonnull Class<?> type,
                                                        final @Nonnull PropertyDescriptor propertyDescriptor) {
         final Method setter = getRawSetter(type, propertyDescriptor);
         return (object, value) -> {

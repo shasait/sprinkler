@@ -27,11 +27,11 @@ import de.hasait.sprinkler.domain.sensor.SensorPO;
 import de.hasait.sprinkler.domain.sensor.SensorValuePO;
 import de.hasait.sprinkler.service.relay.driver.RelayDriver;
 import de.hasait.sprinkler.service.sensor.driver.SensorDriver;
-import de.hasait.sprinkler.ui.relay.RelayDriversView;
+import de.hasait.sprinkler.ui.relay.RelayDriverGridView;
 import de.hasait.sprinkler.ui.relay.RelayGrid;
 import de.hasait.sprinkler.ui.schedule.ScheduleLogsView;
 import de.hasait.sprinkler.ui.schedule.ScheduleGrid;
-import de.hasait.sprinkler.ui.sensor.SensorDriversView;
+import de.hasait.sprinkler.ui.sensor.SensorDriverGridView;
 import de.hasait.sprinkler.ui.sensor.SensorValuesView;
 import de.hasait.sprinkler.ui.sensor.SensorGrid;
 
@@ -43,13 +43,13 @@ public class SprinklerMainLayoutCustomizer extends AbstractMainLayoutCustomizer 
 
     @Override
     public void populateDrawer(VerticalLayout verticalLayout) {
-        addDataViewRouterLink(verticalLayout, SchedulePO.class, "grid", ScheduleGrid.class);
-        addDataViewRouterLink(verticalLayout, ScheduleLogPO.class, "grid", ScheduleLogsView.class);
-        addDataViewRouterLink(verticalLayout, RelayPO.class, "grid", RelayGrid.class);
-        addDataViewRouterLink(verticalLayout, RelayDriver.class, "grid", RelayDriversView.class);
-        addDataViewRouterLink(verticalLayout, SensorPO.class, "grid", SensorGrid.class);
-        addDataViewRouterLink(verticalLayout, SensorValuePO.class, "grid", SensorValuesView.class);
-        addDataViewRouterLink(verticalLayout, SensorDriver.class, "grid", SensorDriversView.class);
+        addDataViewRouterLink(verticalLayout, ScheduleGrid.class);
+        addDataViewRouterLink(verticalLayout, ScheduleLogsView.class);
+        addDataViewRouterLink(verticalLayout, RelayGrid.class);
+        addDataViewRouterLink(verticalLayout, RelayDriverGridView.class);
+        addDataViewRouterLink(verticalLayout, SensorGrid.class);
+        addDataViewRouterLink(verticalLayout, SensorValuesView.class);
+        addDataViewRouterLink(verticalLayout, SensorDriverGridView.class);
     }
 
 }

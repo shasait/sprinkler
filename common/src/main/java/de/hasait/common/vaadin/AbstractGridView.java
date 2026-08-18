@@ -25,16 +25,10 @@ import java.util.function.Consumer;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.router.HasDynamicTitle;
-import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import de.hasait.common.util.I18nSupport;
-
-public abstract class AbstractGridView<B> extends VerticalLayout implements HasDynamicTitle {
+public abstract class AbstractGridView<B> extends AbstractPage {
 
     private static final Logger LOG = LoggerFactory.getLogger(AbstractGridView.class);
 
@@ -43,40 +37,27 @@ public abstract class AbstractGridView<B> extends VerticalLayout implements HasD
 
     private final List<Consumer<B>> selectionConsumers = new ArrayList<>();
 
-    protected I18nSupport i18nSupport;
-
     public AbstractGridView(Class<B> beanClass) {
+        super();
+
         this.beanClass = beanClass;
+
+        beanGrid = new Grid<>(beanClass, false);
+    }
+
+    @Override
+    protected void populateLayout() {
+        super.populateLayout();
+
+        beanGrid.setSizeFull();
+        add(beanGrid);
+
+        populateBeanGrid();
 
         addAttachListener(this::attach);
         addDetachListener(this::detach);
 
-        setSizeFull();
-
-        beanGrid = new Grid<>(beanClass, false);
-        beanGrid.setSizeFull();
-        add(beanGrid);
-    }
-
-    @PostConstruct
-    final void init() {
-        populateBeanGrid();
-
         beanGrid.addSelectionListener(event -> notifyGridSelectionChanged());
-    }
-
-    public final I18nSupport getI18nSupport() {
-        return i18nSupport;
-    }
-
-    @Autowired
-    public final void setI18nSupport(I18nSupport i18nSupport) {
-        this.i18nSupport = i18nSupport;
-    }
-
-    @Override
-    public final String getPageTitle() {
-        return i18nSupport.applicationAndPageTitle(beanClass, "grid");
     }
 
     protected abstract void populateBeanGrid();

@@ -19,10 +19,14 @@ package de.hasait.common.vaadin;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import java.util.function.Supplier;
 
 import com.vaadin.flow.component.ItemLabelGenerator;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.shared.HasTooltip;
+import com.vaadin.flow.data.binder.ValueContext;
 import com.vaadin.flow.data.provider.DataProvider;
+import jakarta.annotation.Nonnull;
 
 import de.hasait.common.service.HasId;
 import de.hasait.common.service.Store;
@@ -69,6 +73,14 @@ public class VaadinUtil {
 
         // TODO implement filters, sorting ...
         return DataProvider.fromFilteringCallbacks(q -> store.listAllBeans().stream(), q -> Util.longToInt(store.countAllBeans()));
+    }
+
+    public static void setTooltip(@Nonnull ValueContext context, @Nonnull Supplier<String> tooltipSupplier) {
+        context.getComponent().ifPresent(component -> {
+            if (component instanceof HasTooltip hasTooltip) {
+                hasTooltip.setTooltipText(tooltipSupplier.get());
+            }
+        });
     }
 
 }

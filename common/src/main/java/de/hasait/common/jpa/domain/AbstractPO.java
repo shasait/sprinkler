@@ -16,12 +16,16 @@
 
 package de.hasait.common.jpa.domain;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.Version;
 
 @MappedSuperclass
+@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class)
 public abstract class AbstractPO implements PersistantObject {
 
     @Id
@@ -32,6 +36,7 @@ public abstract class AbstractPO implements PersistantObject {
     protected long version;
 
     @Override
+    @JsonIgnore
     public Long getId() {
         return id;
     }
@@ -41,6 +46,7 @@ public abstract class AbstractPO implements PersistantObject {
     }
 
     @Override
+    @JsonIgnore
     public long getVersion() {
         return version;
     }

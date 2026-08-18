@@ -67,6 +67,7 @@ public final class HasIdBpUiFactory extends AbstractBpUiFactory<Object, HasId<?>
         return new SimpleBpUiWidget<>(bpUiWidgets, beanProperty, getI18nSupport(), labelText -> {
             ComboBox<P> field = new ComboBox<>(labelText);
             field.setItems(VaadinUtil.createBestDataProvider(store));
+            field.setClearButtonVisible(true);
             field.setItemLabelGenerator(labelFunction);
             return field;
         }) {

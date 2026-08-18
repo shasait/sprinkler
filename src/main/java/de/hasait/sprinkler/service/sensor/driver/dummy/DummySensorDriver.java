@@ -57,7 +57,7 @@ public class DummySensorDriver implements SensorDriver<String> {
 
     @Override
     public @Nonnull String parseDriverConfigText(@Nullable String driverConfigText) {
-        AssertUtil.matches(PATTERN, driverConfigText);
+        AssertUtil.matches(PATTERN, driverConfigText, "driverConfigText");
         return driverConfigText;
     }
 

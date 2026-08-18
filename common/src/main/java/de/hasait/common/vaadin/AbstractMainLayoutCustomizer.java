@@ -18,7 +18,11 @@ package de.hasait.common.vaadin;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasComponents;
+import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.router.RouterLink;
+import com.vaadin.flow.router.RouterState;
+import com.vaadin.flow.signals.Signal;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import de.hasait.common.util.I18nSupport;
@@ -32,13 +36,27 @@ public abstract class AbstractMainLayoutCustomizer implements MainLayoutCustomiz
         this.i18nSupport = i18nSupport;
     }
 
-    private String getPageTitle(Class<?> dataClass, String pageType) {
-        return i18nSupport.pageTitle(dataClass.getSimpleName(), pageType);
+    private String getPageTitle(Class<? extends Component> viewClass) {
+        return i18nSupport.pageTitle(viewClass);
     }
 
-    protected final void addDataViewRouterLink(HasComponents hasComponents, Class<?> dataClass, String pageType, Class<? extends Component> viewClass) {
-        RouterLink routerLink = new RouterLink(getPageTitle(dataClass, pageType), viewClass);
-        hasComponents.add(routerLink);
+    protected final void addDataViewRouterLink(HasComponents hasComponents, Class<? extends Component> targetViewClass) {
+        RouterLink routerLink = new RouterLink(getPageTitle(targetViewClass), targetViewClass);
+        Div routerLinkDiv = new Div(routerLink);
+        Signal<RouterState> routerState = UI.getCurrent().routerStateSignal();
+        // TODO adapt CSS
+        routerLinkDiv.addClassName("routerLink");
+        routerLinkDiv.bindClassName("active", routerState.map(state -> {
+            if (state == null) {
+                return false;
+            }
+            Class<? extends Component> viewClass = state.navigationTarget();
+            if (viewClass == null) {
+                return false;
+            }
+            return targetViewClass.equals(viewClass);
+        }));
+        hasComponents.add(routerLinkDiv);
     }
 
 }

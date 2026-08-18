@@ -22,11 +22,11 @@ import com.vaadin.flow.component.grid.Grid;
 import de.hasait.common.service.driver.AbstractDriverService;
 import de.hasait.common.service.driver.Driver;
 
-public class AbstractDriversView<D extends Driver<?>, S extends AbstractDriverService<D, ?, ?>> extends AbstractGridView<D> {
+public class AbstractDriverGridView<D extends Driver<?>, S extends AbstractDriverService<D, ?, ?>> extends AbstractGridView<D> {
 
     private final S driverService;
 
-    public AbstractDriversView(S driverService) {
+    public AbstractDriverGridView(S driverService) {
         super(driverService.getDriverClass());
 
         this.driverService = driverService;
